@@ -1,0 +1,9 @@
+2013-12-13 08:30	2013-12-13 08:45	135	"Team TDE"	"swishrättningar_i_infra"	""
+2013-12-13 08:45	2013-12-13 11:00	135	"Team TDE"	"swishrättningar_i_infra"	""
+2013-12-13 11:00	2013-12-13 11:45	45	"Annat"	"Lunch"	""
+2013-12-13 11:45	2013-12-13 14:29	164	"Team TDE"	"swishrättningar_i_infra"	""
+2013-12-13 14:29	2013-12-13 17:00	158	"Team TDE"	"swishrättningar_i_infra"	""
+2013-12-16 08:45	2013-12-16 11:00	135	"Team TDE"	"swishrättningar_i_infra"	""
+2013-12-16 11:00	2013-12-16 11:45	45	"Annat"	"Lunch"	""
+2013-12-16 11:45	2013-12-16 16:58	313	"Team TDE"	"swishrättningar_i_infra"	""
+
