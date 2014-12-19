@@ -6,8 +6,8 @@ import scala.io.Source
  * by other parts of the program
  */
 object FileUtil {
+
   def readFromFile(filename: String) = {
-    val lines = Source.fromFile(filename).mkString
-    println(lines);
-  }
+    Source.fromFile(filename).getLines.toArray
+   }
 }
