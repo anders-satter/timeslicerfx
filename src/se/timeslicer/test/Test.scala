@@ -17,29 +17,36 @@ object Test {
   
   
   def parseLogItem(logLine:String):Item = {
+    if (logLine.length() > 0){
     val parts = logLine.split('\t');
     //parts.map(println);
-    return Item(parts(0),parts(1),parts(3),parts(4),parts(5), Util.getDayValueInMs(parts(0)))
-  }
+    return Item(parts(0),parts(1),parts(3),parts(4),parts(5), Util.getDayValueInMs(parts(0)))    
+    }
+    return null
+   }
   
   
   /*
    * Try and read from the logs 
    */
   val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
-  println(parseLogItem(logLines(0)).start)
-  println(parseLogItem(logLines(0)).end)
- 
-  println(parseLogItem(logLines(0)).project)
-  println(parseLogItem(logLines(0)).activity)
-  println(parseLogItem(logLines(0)).duration)
-  println(parseLogItem(logLines(0)).dayValue)
-  
+//  println(parseLogItem(logLines(0)).start)
+//  println(parseLogItem(logLines(0)).end)
+// 
+//  println(parseLogItem(logLines(0)).project)
+//  println(parseLogItem(logLines(0)).activity)
+//  println(parseLogItem(logLines(0)).duration)
+//  println(parseLogItem(logLines(0)).dayValue)
+//  
  
   /*
    * create a list of items
    */
   
+  //logLines.map(println)
+  
+  val itemList = logLines.map(parseLogItem)
+  itemList.map(println)
   
   
   /*
