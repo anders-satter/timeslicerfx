@@ -1,6 +1,6 @@
 package se.timeslicer.log
 
-import se.timeslicer.util.Util
+import se.timeslicer.util.DateTime
 
 case class Item(start:String, 
     end:String, 
@@ -9,6 +9,6 @@ case class Item(start:String,
     comment:String, 
     dayValue:Long) {
 	def duration:Long = {
-	  Util.elapsedMinutes(start, end)
+	  DateTime.elapsedMinutes(start, end)
 	}
 }

@@ -2,8 +2,15 @@ package se.timeslicer.test
 
 import se.timeslicer.log.Item
 import se.timeslicer.file.FileUtil
-import se.timeslicer.util.Util
+import se.timeslicer.util.DateTime
+import se.timeslicer.util.ItemUtil
+import se.timeslicer.reporting.Activity
+import se.timeslicer.reporting.Project
+import se.timeslicer.reporting.IntervalResult
 
+/**
+ * Test the different parts of the application
+ */
 object Test {
   def main(args: Array[String]) {
 	 val i = Item("2014-11-23 09:00", 
@@ -11,57 +18,34 @@ object Test {
 	     "Team TDE", 
 	     "scrum", 
 	     "it is ok...", 
-	     Util.getDayValueInMs("2014-11-23 09:00"))
-	 
+	     DateTime.getDayValueInMs("2014-11-23 09:00"))
   }
-  
-  
-  def parseLogItem(logLine:String):Item = {
-    if (logLine.length() > 0){
-    val parts = logLine.split('\t');
-    //parts.map(println);
-    return Item(parts(0),parts(1),parts(3),parts(4),parts(5), Util.getDayValueInMs(parts(0)))    
-    }
-    return null
-   }
-  
   
   /*
    * Try and read from the logs 
    */
   val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
-//  println(parseLogItem(logLines(0)).start)
-//  println(parseLogItem(logLines(0)).end)
-// 
-//  println(parseLogItem(logLines(0)).project)
-//  println(parseLogItem(logLines(0)).activity)
-//  println(parseLogItem(logLines(0)).duration)
-//  println(parseLogItem(logLines(0)).dayValue)
-//  
- 
-  /*
+   /*
    * create a list of items
    */
   
-  //logLines.map(println)
-  
-  val itemList = logLines.map(parseLogItem)
-  itemList.map(println)
-  
+  val interval = new IntervalResult()
+  interval.start = "2013-11-01"
+  interval.end = "2013-11-07" 
+ 
+  interval.itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
+  interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end) 
   
   /*
-   * sort the items
+   * map.key = project, value = array of activities
    */
- 
- 
-  /*
-   * 
-   */
+  val byProject = interval.selection.groupBy(_.project)
   
+  interval.projectList = byProject.map(entry => {
+	 new Project(entry._1, entry._2) 
+  })
   
-  
-  
-  
-  //println(logLines(0))
-  //println(logLines.size)  
-}
+  interval.projectList.foreach(_.compile)
+  interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
+  interval.present
+ }
