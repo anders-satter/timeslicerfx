@@ -37,7 +37,7 @@ object Test {
   val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
 
   /*
-   *  convert the list to itemes
+   *  convert the list to items
    */
 
   interval.itemList = itemList
@@ -85,8 +85,6 @@ object Test {
   /*
    * list of dates
    */
-  
-  
   
   
   

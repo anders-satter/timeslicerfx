@@ -4,16 +4,17 @@ import scala.math.BigDecimal
 import java.util.Date
 import java.util.Locale
 
-
+/**
+ * Holds the the calendar day
+ */
 case class CalendarDay(dayValue: Long, day: String, name: String)
+
 
 object DateTime {
   private val format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm")
   private val formatDay = new java.text.SimpleDateFormat("yyyy-MM-dd")
   private val formatDayName = new java.text.SimpleDateFormat("EE", Locale.ENGLISH)
   private val oneDayMs: Long = 1000 * 60 * 60 * 24
-
-  
   
   
   def elapsedMinutes(start: String, end: String) = {
@@ -76,8 +77,14 @@ object DateTime {
             x => CalendarDay(x, DateTime.getDayValueInStr(x),formatDayName.format(new Date(x)))).toList
   }
   
-  
+  def testFunction:Int = {
+    return 1
+  }
+  /**
+   * the main function is only used for tests
+   */
   def main(args: Array[String]) {
     calendarDayList(1383260400000L, 1383260400000L+(oneDayMs*10)).map(println)
+    println(testFunction)
   }
 }
