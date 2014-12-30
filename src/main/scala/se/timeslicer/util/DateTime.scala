@@ -3,20 +3,20 @@ package se.timeslicer.util
 import scala.math.BigDecimal
 import java.util.Date
 import java.util.Locale
+import se.timeslicer.reporting.CalendarDay
+import java.util.Calendar
 
 /**
  * Holds the the calendar day
  */
-case class CalendarDay(dayValue: Long, day: String, name: String)
-
 
 object DateTime {
   private val format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm")
   private val formatDay = new java.text.SimpleDateFormat("yyyy-MM-dd")
   private val formatDayName = new java.text.SimpleDateFormat("EE", Locale.ENGLISH)
-  private val oneDayMs: Long = 1000 * 60 * 60 * 24
-  
-  
+  private val formatTime = new java.text.SimpleDateFormat("HH:mm")
+  val oneDayMs: Long = 1000 * 60 * 60 * 24
+
   def elapsedMinutes(start: String, end: String) = {
     val d1 = format.parse(start)
     val d2 = format.parse(end)
@@ -39,7 +39,11 @@ object DateTime {
     ((end - start) / oneDayMs).toInt
   }
 
-  def incrementor(initVal: Int): () => Int = {
+ def dayName(dayValue:Long) = {
+   formatDayName.format(new Date(dayValue))
+ }
+  
+  private def incrementor(initVal: Int): () => Int = {
     var startVal: Int = initVal
     () => {
       startVal = startVal + 1
@@ -47,9 +51,9 @@ object DateTime {
     }
   }
 
-  def incrementor2(initVal: Int): Map[String, () => Int] = {
+  private def incrementor2(initVal: Int): Map[String, () => Int] = {
     var startVal: Int = initVal
-     return Map(
+    return Map(
       ("next", () => {
         startVal = startVal + 1
         startVal
@@ -60,31 +64,17 @@ object DateTime {
       }))
   }
 
-  def nextDay = (day: Long) => day + oneDayMs
-
-  def dayIncrementor(startDay:Long):() => Long = {
-    var currentDay = startDay - oneDayMs
-    return ()=> {
-      currentDay = currentDay + oneDayMs 
-      currentDay
-    }
+  def currentTime = {
+    formatTime.format(Calendar.getInstance.getTime())
   }
   
-  def calendarDayList(start:Long, end:Long):List[CalendarDay] = {
-    val dInc = dayIncrementor(start);
-    (0 to getNumberOfDaysInInterval(start, end)).map(
-        i=> dInc()).map(
-            x => CalendarDay(x, DateTime.getDayValueInStr(x),formatDayName.format(new Date(x)))).toList
+  def currentDay = {
+    formatDay.format(Calendar.getInstance.getTime())
   }
-  
-  def testFunction:Int = {
-    return 1
-  }
-  /**
+    /**
    * the main function is only used for tests
    */
   def main(args: Array[String]) {
-    calendarDayList(1383260400000L, 1383260400000L+(oneDayMs*10)).map(println)
-    println(testFunction)
+    println(currentTime)
   }
 }

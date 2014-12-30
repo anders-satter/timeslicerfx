@@ -1,13 +1,13 @@
 package se.timeslicer.test
 
-import se.timeslicer.log.Item
 import se.timeslicer.file.FileUtil
+import se.timeslicer.log.Item
+import se.timeslicer.reporting.Activity
+import se.timeslicer.reporting.DayResultHelper
+import se.timeslicer.reporting.IntervalResult
+import se.timeslicer.reporting.Project
 import se.timeslicer.util.DateTime
 import se.timeslicer.util.ItemUtil
-import se.timeslicer.reporting.Activity
-import se.timeslicer.reporting.Project
-import se.timeslicer.reporting.IntervalResult
-import scala.collection.mutable.ListBuffer
 
 /**
  * Test the different parts of the application
@@ -31,8 +31,8 @@ object Test {
    */
 
   val interval = new IntervalResult()
-  interval.start = "2013-11-01"
-  interval.end = "2013-11-07"
+  interval.start = "2014-12-29"
+  interval.end = "2014-12-30"
 
   val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
 
@@ -59,36 +59,21 @@ object Test {
   /*
    * SUMMARY OF EACH DAY
    */
-  val sortedGroupByDayMap:Seq[(Long, Array[Item])] = interval.selection.groupBy(_.dayValue)
-  /**
-   * group by returns map, which is always unsorted, 
-   * so we need to get a sorted seq to get the days
-   * in the right order
-   */
-  .toSeq.sortBy(_._1)
+  val daySumMap = interval.daySumMap 
+  println(daySumMap)
   
-  case class DaySum(dayValue: Long, day: String, sum: Double)
-
-  def createDaySum(dayValue: Long, dayItems: Array[Item]) = {
-    val sumOfDay = DateTime.getDecimalHours(dayItems.map(_.duration).reduceLeft(_ + _))
-    val dayStr = DateTime.getDayValueInStr(dayValue)
-    DaySum(dayValue, dayStr, sumOfDay)
-  }
-  val daySumList = sortedGroupByDayMap.map(i => createDaySum(i._1, i._2))
-
-  daySumList.map(println)
-
   /*
    * CALENDAR
    */
-  
+
   /*
    * list of dates
    */
+
+  //val calDayList = DayResultHelper.calendarDayList(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end))
+  //calDayList.map(println)
+  val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
   
-  
-  
-  
-  
+  dayResultList.map(println)
   
 }

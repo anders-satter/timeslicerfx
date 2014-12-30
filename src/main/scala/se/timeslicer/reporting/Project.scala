@@ -21,7 +21,7 @@ class Project(val name: String, val items: Array[Item]) {
     /*
      * Calculates the total time of the project
      * 
-     * this is the way to summarise attributes of a class
+     * this is the way to summarize attributes of a class
      * or structure
      * - items is the list of classes
      * - map(_.duration) returns an immutable map of results from the duration calculations

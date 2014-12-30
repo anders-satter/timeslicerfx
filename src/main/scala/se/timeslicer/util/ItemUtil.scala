@@ -6,6 +6,7 @@ object ItemUtil {
   def parseLogItem(logLine:String):Item = {
     if (logLine.length() > 0){
     	val parts = logLine.split('\t');
+      //println(parts(3))
     	//parts.map(println);
     	return Item(parts(0),
     	    parts(1),
@@ -27,10 +28,16 @@ object ItemUtil {
   }
 
   def round(value:Double, decimals:Int):Double= {
+    //println(value)
     return BigDecimal(value).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
   
   def percent(x:Long, y:Long, decimals:Int):Double = {
-    return round(x.toDouble/y.toDouble * 100, decimals)
+    if (x != 0 && y != 0){
+      return round(x.toDouble/y.toDouble * 100, decimals)  
+    } else {
+      return 0.0
+    } 
+    
   }
 }

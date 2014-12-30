@@ -1,4 +1,4 @@
-﻿#Administration
+#Administration
 +Gruppmöte
 +Informationsmöte
 +Lära-känna-samtal
@@ -6,6 +6,9 @@
 +Tidrapportering
 #AML
 +Meeting
+#ankle
++chromata
++lincoln
 #Annat
 +AllmäntIT
 +Datorsupport
@@ -28,6 +31,7 @@
 +Möte
 #Friskvård
 +basket
++ecko
 +prom_till_alvik
 +promenad_till_jobbet
 +squash
@@ -55,6 +59,8 @@
 +prjmöte
 +templates
 +överlämningsmöte
+#Loca
++sola
 #Lönebedömning
 +medarbetare
 +mig_själv
@@ -83,6 +89,7 @@
 +.../dap...fel
 +adform
 +buttonOngoingRequest
++chromata
 +CIS
 +Content-Language_enProblem
 +DAPSessionContextMemoryStoreImpl_cleanCheck
