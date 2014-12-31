@@ -35,6 +35,9 @@ import scalafx.scene.layout.BorderPane
 import se.timeslicer.util.FXUtils
 import scalafx.scene.control.TextField
 import scalafx.scene.input.KeyCode
+import scalafx.scene.layout.Pane
+import scalafx.scene.control.TextArea
+import scalafx.scene.Node
 
 /**
  * Main entry for the Timeslicer application
@@ -53,7 +56,7 @@ object TimeslicerMain extends JFXApp {
   def reloadProjects = Conversion.getObservableBuffer(InputManagerHelper.currentProjectBuffer.sortBy(_.name.toLowerCase()).map(_.name).toSeq)
   InputManagerHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
   InputManagerHelper.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
-  
+
   InputManagerHelper.loadProjects
 
   /*
@@ -175,11 +178,11 @@ object TimeslicerMain extends JFXApp {
   }
 
   def showRegisterTimeItemDialog = {
-      FXUtils.runAndWait {
-        RegisterTimeItem.showDialog(currentProject, currentActivity, globalTextFormatting)
-      }
+    FXUtils.runAndWait {
+      RegisterTimeItem.showDialog(currentProject, currentActivity, globalTextFormatting)
+    }
   }
-  
+
   val projectBox = new VBox {
     padding = Insets(10)
     spacing = 5
@@ -200,9 +203,91 @@ object TimeslicerMain extends JFXApp {
     content = List(projectBox, activityBox)
   }
 
-  /*
-   * all the world is a stage, and each must play a part... 
-   */
+  val group1 = new Group {
+    stylesheets += globalTextFormatting
+    new StackPane {
+      content = new SplitPane {
+        padding = Insets(20)
+        dividerPositions_=(0.20, 0.80)
+        items ++= Seq(listViewsBox)
+      }
+    }
+  }
+
+  val reportingTextArea = new TextArea {
+    text = "this is where the report is going to be found"
+  }
+
+//  def getPagePane: Node = {
+//    if (true) {
+//      return registerItemPage
+//    } else {
+//      return reportingPage
+//    }
+//  }
+
+  
+
+  var isRegisterPage = true  
+  val pageToggleButton = new Button {
+    text = "To Reporting Page"
+    onMouseClicked = { (ae: MouseEvent) =>
+      {
+         if (isRegisterPage==true){
+           isRegisterPage = false
+           text = "To Register Page"
+           contentBox.content = reportingPage
+           contentBox.requestLayout()
+         } else {
+           isRegisterPage = true
+           text = "To Reporting Page"
+           contentBox.content = registerItemPage
+           contentBox.requestLayout()
+         }
+      }
+    }
+    onKeyPressed = { (ke: KeyEvent) =>
+      {
+        if (ke.code == KeyCode.ENTER) {
+         if (isRegisterPage==true){
+           isRegisterPage = false
+           text = "To Register Page"
+           contentBox.content = reportingPage
+           contentBox.requestLayout()
+         } else {
+           isRegisterPage = true
+           text = "To Reporting Page"
+           contentBox.content = registerItemPage
+           contentBox.requestLayout()
+         }
+        }
+      }
+    }
+  }
+
+  val pageToggleButtonBox = new HBox {
+    padding = Insets(10)
+    content = List(pageToggleButton)
+  }
+  val registerItemPage = new StackPane {
+    content = new SplitPane {
+      padding = Insets(20)
+      dividerPositions_=(0.20, 0.80)
+      items ++= Seq(listViewsBox)
+    }
+  }
+
+  val reportingPage = new StackPane {
+    content = new SplitPane {
+      padding = Insets(20)
+      dividerPositions_=(0.20, 0.80)
+      items ++= Seq(reportingTextArea)
+    }
+  }
+
+  val contentBox = new VBox {
+   content = registerItemPage
+  }
   stage = new JFXApp.PrimaryStage {
     title.value = "Timeslicer"
     width = 700
@@ -210,13 +295,9 @@ object TimeslicerMain extends JFXApp {
     scene = new Scene {
       root = {
         stylesheets += globalTextFormatting
-        new StackPane {
-          content = new SplitPane {
-            padding = Insets(20)
-            dividerPositions_=(0.20, 0.80)
-            items ++= Seq(listViewsBox)
-          }
-        }
+        new VBox {
+          content = Seq(pageToggleButtonBox, contentBox)
+        }        
       }
     }
   }

@@ -21,7 +21,7 @@ object Test {
       "it is ok...",
       DateTime.getDayValueInMs("2014-11-23 09:00"))
   }
-
+  
   /*
    * Try and read from the logs 
    */

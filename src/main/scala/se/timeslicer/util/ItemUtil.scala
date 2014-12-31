@@ -6,8 +6,6 @@ object ItemUtil {
   def parseLogItem(logLine:String):Item = {
     if (logLine.length() > 0){
     	val parts = logLine.split('\t');
-      //println(parts(3))
-    	//parts.map(println);
     	return Item(parts(0),
     	    parts(1),
     	    parts(3).replaceAll("\"", ""), 
@@ -28,7 +26,6 @@ object ItemUtil {
   }
 
   def round(value:Double, decimals:Int):Double= {
-    //println(value)
     return BigDecimal(value).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
   
