@@ -6,6 +6,8 @@
 +Tidrapportering
 #AML
 +Meeting
+#Anders
++go home
 #ankle
 +chromata
 +lincoln
@@ -36,6 +38,7 @@
 +promenad_till_jobbet
 +squash
 #Fronten
++Anchoring
 +bankidhandlistfkund
 +CacheFixWS->NotExposedWS
 +clean_integrationcache
@@ -59,6 +62,7 @@
 +prjmöte
 +templates
 +överlämningsmöte
+#load
 #Loca
 +sola
 #Lönebedömning
@@ -80,8 +84,10 @@
 +Ändamål: 506 Projektkod: R720 Funktion/Kund: E001 Xkod: 15
 #Personalvård
 +Humankapitalmätning
++Solarium
 #Semester
 +ledig
+#Sigsten
 #Spider
 +kartläggning av kod
 +workshop
