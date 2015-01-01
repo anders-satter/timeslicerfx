@@ -28,6 +28,7 @@ object ItemUtil {
   def round(value:Double, decimals:Int):Double= {
     return BigDecimal(value).setScale(decimals, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
+  def round2(value:Double) = round(value, 2);
   
   def percent(x:Long, y:Long, decimals:Int):Double = {
     if (x != 0 && y != 0){

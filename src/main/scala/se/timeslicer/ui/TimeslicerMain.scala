@@ -21,6 +21,7 @@ import se.timeslicer.input.InputHelper
 import se.timeslicer.ui.conversions.Conversion
 import se.timeslicer.util.FXUtils
 import se.timeslicer.reporting.ReportingHelper
+import se.timeslicer.settings.Settings
 
 /**
  * Main entry for the Timeslicer application
@@ -40,9 +41,9 @@ object TimeslicerMain extends JFXApp {
   var currentProject = ""
   var currentActivity = ""
   var isRegisterPage = true
-
-  InputHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
-  InputHelper.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
+  Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+  Settings.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
+  Settings.loadProperties
   InputHelper.loadProjects
 
   /*

@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 import se.timeslicer.file.FileUtil
 import scalafx.collections.ObservableBuffer
 import se.timeslicer.ui.conversions.Conversion
+import se.timeslicer.settings.Settings
 
 case class InputProject(name: String, activities: ListBuffer[InputActivity])
 case class InputActivity(name: String)
@@ -13,18 +14,7 @@ case class InputActivity(name: String)
  * projects and activities
  */
 object InputHelper {
-  private var _logFileName: String = ""
-  def logFileName = _logFileName
-  def logFileName_=(value: String): Unit = _logFileName = value
-
-  private var _projectFileName: String = ""
-  def projectFileName = _projectFileName
-  def projectFileName_=(value: String): Unit = _projectFileName = value
-
-  private var _settingsFileName: String = ""
-  def settingsFileName = _settingsFileName
-  def settingsFileName_=(value: String): Unit = _settingsFileName = value
-
+  
   private var _currentProjectBuffer: ListBuffer[InputProject] = null
   def currentProjectBuffer = _currentProjectBuffer
   def currentProjectBuffer_=(value: ListBuffer[InputProject]): Unit = _currentProjectBuffer = value
@@ -35,7 +25,7 @@ object InputHelper {
    * them into an array of strings
    */
   private def readProjectsFromFile: Array[String] = {
-    FileUtil.readFromFile(projectFileName)
+    FileUtil.readFromFile(Settings.projectFileName)
   }
 
   def loadProjects: ListBuffer[InputProject] = {
@@ -82,7 +72,7 @@ object InputHelper {
    * log.txt
    */
   def saveLogItemToFile(logItem: String) = {
-    FileUtil.saveToFile(logFileName, logItem, true)
+    FileUtil.saveToFile(Settings.logFileName, logItem, true)
   }
 
   def getActivitiesForProject(projectName: String): ObservableBuffer[String] = {
@@ -136,7 +126,7 @@ object InputHelper {
         })
       })
       //println(fileContent.toString())
-      FileUtil.saveToFile(projectFileName, fileContent.toString, false)
+      FileUtil.saveToFile(Settings.projectFileName, fileContent.toString, false)
     }
   }
 
@@ -145,7 +135,7 @@ object InputHelper {
    * this main method is only used for testing.
    */
   def main(args: Array[String]): Unit = {
-    projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
     loadProjects
   }
 }

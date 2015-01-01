@@ -18,6 +18,7 @@ import scalafx.scene.control.ListView
 import scalafx.collections.ObservableBuffer
 import se.timeslicer.input.InputHelper
 import se.timeslicer.ui.conversions.Conversion
+import se.timeslicer.settings.Settings
 
 /**
  * A sample that demonstrates styling a hidden split pane with CSS.
@@ -34,7 +35,7 @@ object HiddenSplitPaneSample extends JFXApp {
 
   val listView = new ListView[String] {
     maxWidth = 200
-    InputHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
     items = Conversion.getObservableBuffer(InputHelper.loadProjects.map(_.name).toSeq)
     selectionModel().setSelectionMode(SelectionMode.SINGLE)
   }

@@ -5,6 +5,7 @@ import java.util.Date
 import java.util.Locale
 import se.timeslicer.reporting.CalendarDay
 import java.util.Calendar
+import se.timeslicer.settings.Settings
 
 /**
  * Holds the the calendar day
@@ -39,10 +40,10 @@ object DateTime {
     ((end - start) / oneDayMs).toInt
   }
 
- def dayName(dayValue:Long) = {
-   formatDayName.format(new Date(dayValue))
- }
-  
+  def dayName(dayValue: Long) = {
+    formatDayName.format(new Date(dayValue))
+  }
+
   private def incrementor(initVal: Int): () => Int = {
     var startVal: Int = initVal
     () => {
@@ -67,14 +68,44 @@ object DateTime {
   def currentTime = {
     formatTime.format(Calendar.getInstance.getTime())
   }
-  
+
   def currentDay = {
     formatDay.format(Calendar.getInstance.getTime())
   }
-    /**
+
+  def isDay(test: String): Boolean = {
+    var result = false
+    if (test.length() == 10) {
+      try {
+        formatDay.parse(test)
+        result = true
+      } catch {
+        case e: Exception => result = false
+      }
+    }
+    result
+  }
+
+  def dayNormalTime(day: Long): Double = {
+    var result = 0.0
+    val name = dayName(day)
+    val formattedDay = getDayValueInStr(day)
+    if (name.toLowerCase().startsWith("sat")
+      || name.toLowerCase().startsWith("sun")) {
+      result = 0.0
+    } else if (Settings.specialWorkdays.contains(formattedDay)) {
+      result = Settings.specialWorkdays(formattedDay)
+    } else {
+      result = Settings.propertiesMap("NormalTime").toDouble
+    }
+    result
+  }
+
+  /**
    * the main function is only used for tests
    */
   def main(args: Array[String]) {
-    println(currentTime)
+    //println(currentTime)
+    println(isDay("20-01-01"))
   }
 }
