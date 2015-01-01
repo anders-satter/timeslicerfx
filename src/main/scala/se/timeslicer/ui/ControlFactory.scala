@@ -1,7 +1,6 @@
 package se.timeslicer.ui
 
 import scala.collection.TraversableOnce
-
 import scalafx.Includes.eventClosureWrapperWithParam
 import scalafx.Includes.jfxKeyEvent2sfx
 import scalafx.Includes.jfxMouseEvent2sfx
@@ -24,7 +23,6 @@ import scalafx.scene.layout.VBox
  * Factory for standard controls
  */
 object ControlFactory {
-
   def projectListView(itemBuffer: ObservableBuffer[String], onProjectSelectHandler: (ObservableBuffer[String]) => Unit): ListView[String] = {
     new ListView[String] {
       maxWidth = 200
@@ -43,7 +41,6 @@ object ControlFactory {
       onKeyReleased = { (e: KeyEvent) => { onActivitySelectHandler(selectionModel().getSelectedItems) } }
     }
   }
-
   def button(buttonText: String, buttonOnActionHandler: () => Unit): Button = {
     new Button {
       text = buttonText
@@ -57,7 +54,6 @@ object ControlFactory {
       }
     }
   }
-
   def vbox(contentSeq: Iterable[Node]): VBox = {
     new VBox {
       padding = Insets(10)

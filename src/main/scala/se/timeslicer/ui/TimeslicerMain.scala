@@ -40,7 +40,6 @@ object TimeslicerMain extends JFXApp {
   var currentActivity = ""
   var isRegisterPage = true
 
-  def reloadProjects = Conversion.getObservableBuffer(InputManagerHelper.currentProjectBuffer.sortBy(_.name.toLowerCase()).map(_.name).toSeq)
   InputManagerHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
   InputManagerHelper.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
   InputManagerHelper.loadProjects
@@ -68,11 +67,11 @@ object TimeslicerMain extends JFXApp {
    * HANDLERS
    * -------------
    */
+  def reloadProjects = Conversion.getObservableBuffer(InputManagerHelper.currentProjectBuffer.sortBy(_.name.toLowerCase()).map(_.name).toSeq)
   def onProjectSelectHandler(projectName: ObservableBuffer[String]) = {
     actListView.items = InputManagerHelper.getActivitiesForProject(projectName(0))
     currentProject = projectName(0)
   }
-
   def onActivitySelectHandler(activityName: ObservableBuffer[String]) = {
     currentActivity = activityName(0)
   }
