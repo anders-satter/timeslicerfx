@@ -50,7 +50,6 @@ object TimeslicerMain extends JFXApp {
    * CONTROLS
    * --------
    */
-
   /* Project management*/
   val projectsLabel = new Label { text = "Project" }
   val prjListView = ControlFactory.projectListView(reloadProjects, onProjectSelectHandler)
@@ -184,6 +183,8 @@ object TimeslicerMain extends JFXApp {
    */
   val contentBox = new VBox {
     content = registerItemPage
+    autosize()
+    
   }
 
   stage = new JFXApp.PrimaryStage {

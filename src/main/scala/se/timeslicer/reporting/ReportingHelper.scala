@@ -22,7 +22,10 @@ object ReportingHelper {
   private val endDayLabel = new Label { text = "End Day:" }
   private val endDayField = new TextField { text = "" }
   private val submitButton = ControlFactory.button("Submit", onSubmitButtonHandler)
-  private val summaryTextArea = new TextArea { text = "empty" }
+  private val summaryTextArea = new TextArea {
+    text = "empty"
+    prefHeight = 900
+  }
 
   /*----------------
    * VARIABLES
@@ -36,7 +39,7 @@ object ReportingHelper {
    * -------------------
    */
 
-  def init = {
+  private def init = {
     if (startDayField.text.value == "") {
       startDayField.text = DateTime.currentDay
     }
@@ -50,7 +53,9 @@ object ReportingHelper {
     init
     val inputBox = ControlFactory.hbox(Seq(startDayLabel, startDayField, endDayLabel, endDayField, submitButton))
     inputBox.alignment = Pos.Center
-    ControlFactory.vbox(Seq(inputBox, summaryTextArea))
+    val outBox = ControlFactory.vbox(Seq(inputBox, summaryTextArea))
+    outBox.autosize()    
+    outBox
   }
 
   private def setInputDays = {
@@ -78,10 +83,10 @@ object ReportingHelper {
      * convert the list to items
      */
     interval.itemList = itemList
-    
+
     interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
     if (interval.selection.length > 0) {
-      
+
       /* We have log items in the selection
        * map.key = project, value = array of activities 
        */

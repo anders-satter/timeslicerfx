@@ -70,18 +70,3 @@ class IntervalResult {
  }
  
 }/*IntervalResult*/
-
-
-
-///*
-//   * DAYSUM
-//   */
-//case class DaySum(dayValue: Long, day: String, sum: Double)
-//
-//object DaySum {
-//  def createDaySum(dayValue: Long, dayItems: Array[Item]) = {
-//    val sumOfDay = DateTime.getDecimalHours(dayItems.map(_.duration).reduceLeft(_ + _))
-//    val dayStr = DateTime.getDayValueInStr(dayValue)
-//    DaySum(dayValue, dayStr, sumOfDay)
-//  }
-//}
