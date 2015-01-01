@@ -83,7 +83,6 @@ object DayResultHelper {
       accumulatedWorkedTime += daySumHrs
       accumulatedNormalTime += normalTime
       val diffAccWtNt: Double = accumulatedWorkedTime - accumulatedNormalTime
-      //case class DayResult(day: CalendarDay, durationMins: Long, durationHrs: Double, diffWtNt: Double, accWt: Double, accNt: Double, diffAccWtNt: Double)
       val iu = ItemUtil
       DayResult(calDay, daySumMnts,
         daySumHrs,
