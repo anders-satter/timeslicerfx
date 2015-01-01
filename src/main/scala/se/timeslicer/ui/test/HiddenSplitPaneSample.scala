@@ -16,7 +16,7 @@ import scalafx.geometry.Pos
 import scalafx.scene.control.SelectionMode
 import scalafx.scene.control.ListView
 import scalafx.collections.ObservableBuffer
-import se.timeslicer.input.InputManagerHelper
+import se.timeslicer.input.InputHelper
 import se.timeslicer.ui.conversions.Conversion
 
 /**
@@ -34,8 +34,8 @@ object HiddenSplitPaneSample extends JFXApp {
 
   val listView = new ListView[String] {
     maxWidth = 200
-    InputManagerHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
-    items = Conversion.getObservableBuffer(InputManagerHelper.loadProjects.map(_.name).toSeq)
+    InputHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    items = Conversion.getObservableBuffer(InputHelper.loadProjects.map(_.name).toSeq)
     selectionModel().setSelectionMode(SelectionMode.SINGLE)
   }
 

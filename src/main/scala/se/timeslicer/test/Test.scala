@@ -21,7 +21,7 @@ object Test {
       "it is ok...",
       DateTime.getDayValueInMs("2014-11-23 09:00"))
   }
-  
+
   /*
    * Try and read from the logs 
    */
@@ -31,8 +31,10 @@ object Test {
    */
 
   val interval = new IntervalResult()
-  interval.start = "2014-12-29"
-  interval.end = "2014-12-30"
+  //  interval.start = "2014-12-29"
+  //  interval.end = "2014-12-30"
+  interval.start = "2013-11-01"
+  interval.end = "2013-11-30"
 
   val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
 
@@ -43,37 +45,43 @@ object Test {
   interval.itemList = itemList
   interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
 
-  /*
+  if (interval.selection.length > 0) {
+    /*
    * map.key = project, value = array of activities
    */
-  val byProject = interval.selection.groupBy(_.project)
+    val byProject = interval.selection.groupBy(_.project)
 
-  interval.projectList = byProject.map(entry => {
-    new Project(entry._1, entry._2)
-  })
+    interval.projectList = byProject.map(entry => {
+      new Project(entry._1, entry._2)
+    })
 
-  interval.projectList.foreach(_.compile)
-  interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
-  interval.present
+    println(interval.projectList)
+    interval.projectList.foreach(_.compile)
+    interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
+    println(interval.present.toString)
 
-  /*
+    /*
    * SUMMARY OF EACH DAY
    */
-  val daySumMap = interval.daySumMap 
-  println(daySumMap)
-  
-  /*
+    val daySumMap = interval.daySumMap
+    println(daySumMap)
+
+    /*
    * CALENDAR
    */
 
-  /*
+    /*
    * list of dates
    */
 
-  //val calDayList = DayResultHelper.calendarDayList(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end))
-  //calDayList.map(println)
-  val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
-  
-  dayResultList.map(println)
-  
+    //val calDayList = DayResultHelper.calendarDayList(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end))
+    //calDayList.map(println)
+    val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
+
+    dayResultList.map(println)
+
+  } else {
+    println("No items found")
+  }
+
 }

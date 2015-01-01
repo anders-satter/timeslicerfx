@@ -17,9 +17,10 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.HBox.sfxHBox2jfx
 import scalafx.scene.layout.StackPane
 import scalafx.scene.layout.VBox
-import se.timeslicer.input.InputManagerHelper
+import se.timeslicer.input.InputHelper
 import se.timeslicer.ui.conversions.Conversion
 import se.timeslicer.util.FXUtils
+import se.timeslicer.reporting.ReportingHelper
 
 /**
  * Main entry for the Timeslicer application
@@ -40,9 +41,9 @@ object TimeslicerMain extends JFXApp {
   var currentActivity = ""
   var isRegisterPage = true
 
-  InputManagerHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
-  InputManagerHelper.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
-  InputManagerHelper.loadProjects
+  InputHelper.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+  InputHelper.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
+  InputHelper.loadProjects
 
   /*
    * --------
@@ -67,9 +68,9 @@ object TimeslicerMain extends JFXApp {
    * HANDLERS
    * -------------
    */
-  def reloadProjects = Conversion.getObservableBuffer(InputManagerHelper.currentProjectBuffer.sortBy(_.name.toLowerCase()).map(_.name).toSeq)
+  def reloadProjects = Conversion.getObservableBuffer(InputHelper.currentProjectBuffer.sortBy(_.name.toLowerCase()).map(_.name).toSeq)
   def onProjectSelectHandler(projectName: ObservableBuffer[String]) = {
-    actListView.items = InputManagerHelper.getActivitiesForProject(projectName(0))
+    actListView.items = InputHelper.getActivitiesForProject(projectName(0))
     currentProject = projectName(0)
   }
   def onActivitySelectHandler(activityName: ObservableBuffer[String]) = {
@@ -82,8 +83,8 @@ object TimeslicerMain extends JFXApp {
         (result, projectName) =>
           {
             if (result == true) {
-              InputManagerHelper.addProject(projectName)
-              InputManagerHelper.saveProjectsToFile
+              InputHelper.addProject(projectName)
+              InputHelper.saveProjectsToFile
               prjListView.items = reloadProjects
             }
           }
@@ -98,9 +99,9 @@ object TimeslicerMain extends JFXApp {
           (result, activityName) =>
             {
               if (result == true) {
-                InputManagerHelper.addActivityToProject(currentProject, activityName)
-                InputManagerHelper.saveProjectsToFile
-                actListView.items = InputManagerHelper.getActivitiesForProject(currentProject)
+                InputHelper.addActivityToProject(currentProject, activityName)
+                InputHelper.saveProjectsToFile
+                actListView.items = InputHelper.getActivitiesForProject(currentProject)
               }
             }
         }, globalTextFormatting)
@@ -176,7 +177,7 @@ object TimeslicerMain extends JFXApp {
   
   val toolbarBox = ControlFactory.hbox(List(pageToggleButton))
   val registerItemPage = new StackPane{ content = ControlFactory.stackPane(Seq(listViewsBox))}  
-  val reportingPage = new StackPane{content = ControlFactory.stackPane(Seq(reportingTextArea))}
+  val reportingPage = new StackPane{content = ControlFactory.stackPane(Seq(ReportingHelper.page))}
   
   /*
    * init the content box with the register page 

@@ -15,7 +15,7 @@ import scalafx.scene.layout.VBox
 import scalafx.scene.text.Text
 import scalafx.stage.Stage
 import se.timeslicer.util.DateTime
-import se.timeslicer.input.InputManagerHelper
+import se.timeslicer.input.InputHelper
 
 /**
  * A simple dialog for supplying input text
@@ -125,14 +125,14 @@ object RegisterTimeItem {
                     text = "Confirm"
                     onMouseClicked = handle {
                       lastSavedTime = endTimeField.text.value
-                      InputManagerHelper.saveLogItemToFile(createItemString)
+                      InputHelper.saveLogItemToFile(createItemString)
                       outer.close()
                     }
                     onKeyReleased = { ke: KeyEvent =>
                       {
                         if (ke.code == KeyCode.ENTER) {
                           lastSavedTime = endTimeField.text.value
-                          InputManagerHelper.saveLogItemToFile(createItemString)
+                          InputHelper.saveLogItemToFile(createItemString)
                           outer.close()
                         }
                       }

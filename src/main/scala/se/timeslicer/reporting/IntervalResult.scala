@@ -44,10 +44,11 @@ class IntervalResult {
    */
   private def groupByDayMap:Map[Long, Array[Item]] = selection.groupBy(_.dayValue)
     
-  def present = {
-    projectList.foreach(_.present(totalTime))
-    println("-----------------------------------")
-    println("Total time: " + DateTime.getDecimalHours(totalTime))
+  def present:StringBuilder = {
+    val strBuffer:StringBuilder = new StringBuilder()
+    projectList.foreach(_.present(totalTime, strBuffer))
+    strBuffer.append("-----------------------------------" + '\n')
+    strBuffer.append("Total time: " + DateTime.getDecimalHours(totalTime))
   }
  
  /**

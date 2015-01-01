@@ -47,15 +47,15 @@ class Project(val name: String, val items: Array[Item]) {
 	})
   }
   
-  def present(totalTimeInInterval:Long) = {
+  def present(totalTimeInInterval:Long, strBuffer:StringBuilder) = {
     val indent2 = "  ";
-    println(this.name + " " + 
+    strBuffer.append(this.name + " " + 
         DateTime.getDecimalHours(this.totalTime) +" (" + 
-        ItemUtil.percent(this.totalTime,totalTimeInInterval, 2)+ "%)") 
+        ItemUtil.percent(this.totalTime,totalTimeInInterval, 2)+ "%)" + '\n') 
     this.activities.foreach(a => {
-      println(indent2 + a.name +" " + 
+      strBuffer.append(indent2 + a.name +" " + 
           DateTime.getDecimalHours(a.totalTime)+ " (" +
-          ItemUtil.percent(a.totalTime,this.totalTime, 2) + "%)")
+          ItemUtil.percent(a.totalTime,this.totalTime, 2) + "%)"  + '\n')
     })
   }
   
