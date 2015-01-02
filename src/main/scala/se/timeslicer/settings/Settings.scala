@@ -49,17 +49,17 @@ object Settings {
     propNames.foreach(item => {
       _propertiesMap += (item -> properties.getProperty(item.toString()))
       if (DateTime.isDay(item.toString)) {
-        println(item)
         _specialWorkdays += (item.toString() -> (properties.getProperty(item.toString)).toDouble)
       }      
     })  
   }
+  
+  /**
+   * Checks against the list NO_CALCULATION_ACTIVITIES in settings.properties  
+   */
   def isCalculable(activity: String):Boolean = {
-    //var result = true
-   
     val excludeActivities = propertiesMap("NO_CALCULATION_ACTIVITIES").split(",").map(_.trim()).map(ItemUtil.removeCitationMarks(_)).toSet
     !excludeActivities.contains(activity)
-    //result
   }
   def main(args: Array[String]): Unit = {
     loadProperties

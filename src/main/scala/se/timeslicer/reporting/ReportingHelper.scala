@@ -28,7 +28,7 @@ object ReportingHelper {
   private val startDayField = new TextField { text = "2013-11-01" }
   private val endDayLabel = new Label { text = "End Day:" }
   private val endDayField = new TextField { text = "2013-12-31" }
-  private val submitButton = ControlFactory.button("Submit", onSubmitButtonHandler)
+  private val submitButton = ControlFactory.button("Submit", generateReport)
   private val summaryTextArea = new TextArea {
     text = "empty"
     prefHeight = 600
@@ -66,7 +66,6 @@ object ReportingHelper {
    * Returns the page to be used by the main application
    * This is not the best way to do it all, as there are no others to l
    */
-
   def page = {
     init
     val inputBox = ControlFactory.hbox(Seq(startDayLabel, startDayField, endDayLabel, endDayField, submitButton))
@@ -83,22 +82,29 @@ object ReportingHelper {
     outBox
   }
 
+  /**
+   * Generates the report, called for the submit button 
+   */
+  private def generateReport() = {
+    setInputDays
+    val intervalResult = getIntervalResult
+    if (intervalResult.selection.length > 0) {
+      createTotalSummaryReport(intervalResult)
+      createDaySummaryReport(intervalResult)      
+    } else {
+      summaryTextArea.text = "No items found"
+    }
+  }
+
+  
   private def setInputDays = {
     currentStartDay = startDayField.text.value
     currentEndDay = endDayField.text.value
   }
-  private def onSubmitButtonHandler() = {
-    setInputDays
-    val intervalResult = getIntervalResult
-    if (intervalResult.selection.length > 0) {
-      compileReport(intervalResult)
-    } else {
-      summaryTextArea.text = "No items found"
-    }
-
-  }
-
-  def getIntervalResult: IntervalResult = {
+  
+  
+ 
+  private def getIntervalResult: IntervalResult = {
     val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
 
     val interval = new IntervalResult()
@@ -112,16 +118,16 @@ object ReportingHelper {
      */
     interval.itemList = itemList.filter(item => Settings.isCalculable(item.activity))
     interval.notCalculatedItemList = itemList.filter(item => Settings.isCalculable(item.activity)==false)
-    intervale
+        
     interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
-    interval
+    return interval
 
   }
 
   /**
    * Compiles the textual summary report
    */
-  private def compileReport(interval: IntervalResult) = {
+  private def createTotalSummaryReport(interval: IntervalResult) = {
 
     /* We have log items in the selection
        * map.key = project, value = array of activities 
@@ -131,13 +137,17 @@ object ReportingHelper {
     interval.projectList = byProject.map(entry => {
       new Project(entry._1, entry._2)
     })
+
     interval.projectList.foreach(_.compile)
     interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
     summaryTextArea.text = interval.present.toString
-    createCalendarTableView(interval)
+  
   }
+  
+  //private
+  
 
-  def createCalendarTableView(interval: IntervalResult) = {
+  def createDaySummaryReport(interval: IntervalResult) = {
     val daySumMap = interval.daySumMap
     val dayResultTableRowBuffer = DayResultHelper.dayResultTableRowBuffer(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
 
