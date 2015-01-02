@@ -8,6 +8,7 @@ import scala.io.Source
 import java.io.FileInputStream
 import scala.collection.mutable.HashMap
 import se.timeslicer.util.DateTime
+import se.timeslicer.util.ItemUtil
 /*
  * Reads settings from the settings.properties file
  */
@@ -53,19 +54,17 @@ object Settings {
       }      
     })  
   }
-
+  def isCalculable(activity: String):Boolean = {
+    //var result = true
+   
+    val excludeActivities = propertiesMap("NO_CALCULATION_ACTIVITIES").split(",").map(_.trim()).map(ItemUtil.removeCitationMarks(_)).toSet
+    !excludeActivities.contains(activity)
+    //result
+  }
   def main(args: Array[String]): Unit = {
     loadProperties
     println(propertiesMap)
     println(specialWorkdays)
+    println(isCalculable("Lunch"))
   }
 }
-
-/*
- * val x = new Properties
-//load from .properties file here.
-import scala.collection.JavaConverters._
-
-scala> x.asScala
-res4: scala.collection.mutable.Map[String,String] = Map()
- */

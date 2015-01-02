@@ -60,4 +60,3 @@ class Project(val name: String, val items: Array[Item]) {
   }
   
 }
-

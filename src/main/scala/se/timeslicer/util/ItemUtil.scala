@@ -38,4 +38,9 @@ object ItemUtil {
     } 
     
   }
+  
+  def removeCitationMarks(name:String):String = {
+    name.replaceAll("\"", "")
+  }
+  
 }

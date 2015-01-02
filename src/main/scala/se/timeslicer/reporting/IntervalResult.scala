@@ -14,6 +14,7 @@ class IntervalResult {
   private var _totalTime: Long = 0
   private var _selection: Array[Item] = null
   private var _itemList: Array[Item] = null
+  private var _notCalculatedItemList:Array[Item] = null
   def projectList_=(list: Iterable[Project]) = _projectList = list
   def projectList = _projectList
   def totalTime = _totalTime
@@ -26,6 +27,9 @@ class IntervalResult {
   def end = _end
   def itemList = _itemList
   def itemList_=(list: Array[Item]) = _itemList = list
+  def notCalculatedItemList = _notCalculatedItemList
+  def notCalculatedItemList_=(list: Array[Item]) = _notCalculatedItemList = list
+  
 
   /**
    * This method is not needed right now
@@ -38,35 +42,34 @@ class IntervalResult {
      */
     .toSeq.sortBy(_._1)
 
-  
   /**
-   * returns a map of  
+   * returns a map of
    */
-  private def groupByDayMap:Map[Long, Array[Item]] = selection.groupBy(_.dayValue)
-    
-  def present:StringBuilder = {
-    val strBuffer:StringBuilder = new StringBuilder()
+  private def groupByDayMap: Map[Long, Array[Item]] = selection.groupBy(_.dayValue)
+
+  def present: StringBuilder = {
+    val strBuffer: StringBuilder = new StringBuilder()
     projectList.foreach(_.present(totalTime, strBuffer))
     strBuffer.append("-----------------------------------" + '\n')
     strBuffer.append("Total time: " + DateTime.getDecimalHours(totalTime))
   }
- 
- /**
-  * returns a map of (dayValue:Long, sumOfDurationForTheDay:Long) items 
-  */
- def daySumMap:Map[Long, Long] = {
-   /*
+
+  /**
+   * returns a map of (dayValue:Long, sumOfDurationForTheDay:Long) items
+   */
+  def daySumMap: Map[Long, Long] = {
+    /*
     * get a map of items grouped on day 
     */
-   val dayItemsMap = groupByDayMap
-   /*
+    val dayItemsMap = groupByDayMap
+    /*
     * create a map of one sum per day
     */
-   val d = dayItemsMap.map(item => {
-    val sum = item._2.map(_.duration).reduceLeft(_ + _)
-    (item._1 -> sum)
-  })
-  return d
- }
- 
+    val d = dayItemsMap.map(item => {
+      val sum = item._2.map(_.duration).reduceLeft(_ + _)
+      (item._1 -> sum)
+    })
+    return d
+  }
+
 }/*IntervalResult*/

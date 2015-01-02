@@ -52,7 +52,7 @@ object TimeslicerMain extends JFXApp {
    * --------
    */
   /* Project management*/
-  val projectsLabel = new Label { text = "Project" }
+  val projectsLabel = new Label { text = "Projects" }
   val prjListView = ControlFactory.projectListView(reloadProjects, onProjectSelectHandler)
   val addProjectButton = ControlFactory.button("Add Project", showAddProjectDialog)
 

@@ -110,8 +110,9 @@ object ReportingHelper {
     /*
      * convert the list to items
      */
-    interval.itemList = itemList
-
+    interval.itemList = itemList.filter(item => Settings.isCalculable(item.activity))
+    interval.notCalculatedItemList = itemList.filter(item => Settings.isCalculable(item.activity)==false)
+    intervale
     interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
     interval
 
