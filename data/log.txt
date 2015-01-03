@@ -1346,3 +1346,5 @@
 2014-12-30 23:41	2014-12-30 23:41	0	"ankle"	"fake"	""	
 2014-12-31 15:00	2014-12-31 16:19	0	"Friskvård"	"promenad_till_jobbet"	"aldkfjalökdj"
 2014-12-31 15:09	2014-12-31 16:38	0	"Anders"	"go home"	""
+2015-01-02 15:10	2015-01-02 20:36	0	"load"	"Lorca"	"Detta är inte vad det är som "
+2015-01-02 20:36	2015-01-02 20:40	0	"Anders"	"go home"	"Detta är inte vad det är som "

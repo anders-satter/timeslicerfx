@@ -44,6 +44,12 @@ object DateTime {
     formatDayName.format(new Date(dayValue))
   }
 
+  def weekDayNumber(day: Long) = {
+    val c = Calendar.getInstance()
+    c.setTime(new Date(day))
+    c.get(Calendar.DAY_OF_WEEK)
+  }
+  
   private def incrementor(initVal: Int): () => Int = {
     var startVal: Int = initVal
     () => {
@@ -100,12 +106,37 @@ object DateTime {
     }
     result
   }
+  
+  def isSaturday(day: Long):Boolean = {
+    weekDayNumber(day) == 7
+    //dayName(day).trim().toLowerCase().startsWith("sat")
+  }
+  def isSaturday(day: String):Boolean = {
+    isSaturday(getDayValueInMs(day)) 
+  }
 
+  def isSunday(day: Long):Boolean = {
+    weekDayNumber(day) == 1
+    //dayName(day).trim().toLowerCase().startsWith("sun")
+  }
+  def isSunday(day: String):Boolean = {
+    isSunday(getDayValueInMs(day))
+  }
+  
+  
+  
   /**
    * the main function is only used for tests
    */
   def main(args: Array[String]) {
-    //println(currentTime)
-    println(isDay("20-01-01"))
+    
+    println(isSaturday("2015-01-03"))
+    println(isSaturday("2015-01-04"))
+    
+    println(isSunday("2015-01-04"))
+    println(isSunday("2015-01-05"))
+    
+    
+    
   }
 }

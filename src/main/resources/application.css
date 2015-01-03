@@ -1,6 +1,78 @@
 .root{
     -fx-font-size: 8pt;
     -fx-font-family: "Lucida Console";
-    /*-fx-base: rgb(132, 145, 47); */
-    /*-fx-background: rgb(225, 228, 203);*/
+    -fx-base: rgb(230, 240, 200); 
+    -fx-background: rgb(240, 250, 240);
 }
+
+
+
+.not-workday {
+    -fx-background-color: rgb(147, 100, 100);
+}
+
+
+
+/*
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, orange;
+}
+
+
+.list-cell:odd {
+-fx-background-color: white;
+}
+
+.list-cell:focused:odd {
+-fx-background-color: linear-gradient(to top, -fx-accent, derive(-fx-accent,30%));
+-fx-background-insets: 0, 1.4;
+}
+
+.list-view:focused .list-cell:filled:selected, .list-view:focused .list-cell:filled:selected:hover {
+-fx-background: -fx-accent;
+-fx-background-color: -fx-selection-bar;
+-fx-text-fill: -fx-selection-bar-text;
+}
+
+.list-cell:filled:hover {
+-fx-background-color: -fx-cell-hover-color;
+-fx-text-fill: -fx-text-inner-color;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+-fx-background-color: lightgray;
+-fx-text-fill: -fx-selection-bar-text;
+}
+
+
+
+.table-cell:odd {
+-fx-background-color: white;
+}
+
+.table-cell:even {
+-fx-background-color: white;
+}
+
+.table-cell:focused:odd {
+-fx-background-color: linear-gradient(to top, -fx-accent, derive(-fx-accent,30%));
+-fx-background-insets: 0, 1.4;
+}
+
+.table-view:focused .table-cell:filled:selected, .table-view:focused .table-cell:filled:selected:hover {
+-fx-background: -fx-accent;
+-fx-background-color: -fx-selection-bar;
+-fx-text-fill: -fx-selection-bar-text;
+}
+
+.table-cell:filled:hover {
+-fx-background-color: -fx-cell-hover-color;
+-fx-text-fill: -fx-text-inner-color;
+}
+
+.table-cell:filled:selected:focused, .table-cell:filled:selected {
+-fx-background-color: lightgray;
+-fx-text-fill: -fx-selection-bar-text;
+}
+*/

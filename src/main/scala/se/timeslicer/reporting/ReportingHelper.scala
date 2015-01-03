@@ -15,6 +15,11 @@ import scalafx.scene.control.SplitPane
 import scalafx.geometry.Orientation
 import se.timeslicer.settings.Settings
 import scalafx.beans.property.StringProperty
+import scalafx.scene.layout.Background
+import scalafx.scene.control.TableCell
+import javafx.beans.value.ObservableStringValue
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
 
 /**
  * Reporting page object
@@ -30,7 +35,7 @@ object ReportingHelper {
   private val endDayField = new TextField { text = "2013-12-31" }
   private val submitButton = ControlFactory.button("Submit", generateReport)
   private val summaryTextArea = new TextArea {
-    text = "empty"
+    text = ""
     prefHeight = 600
   }
   /**
@@ -83,27 +88,24 @@ object ReportingHelper {
   }
 
   /**
-   * Generates the report, called for the submit button 
+   * Generates the report, called for the submit button
    */
   private def generateReport() = {
     setInputDays
     val intervalResult = getIntervalResult
     if (intervalResult.selection.length > 0) {
       createTotalSummaryReport(intervalResult)
-      createDaySummaryReport(intervalResult)      
+      createDaySummaryReport(intervalResult)
     } else {
       summaryTextArea.text = "No items found"
     }
   }
 
-  
   private def setInputDays = {
     currentStartDay = startDayField.text.value
     currentEndDay = endDayField.text.value
   }
-  
-  
- 
+
   private def getIntervalResult: IntervalResult = {
     val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
 
@@ -117,8 +119,8 @@ object ReportingHelper {
      * convert the list to items
      */
     interval.itemList = itemList.filter(item => Settings.isCalculable(item.activity))
-    interval.notCalculatedItemList = itemList.filter(item => Settings.isCalculable(item.activity)==false)
-        
+    interval.notCalculatedItemList = itemList.filter(item => Settings.isCalculable(item.activity) == false)
+
     interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
     return interval
 
@@ -141,13 +143,52 @@ object ReportingHelper {
     interval.projectList.foreach(_.compile)
     interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
     summaryTextArea.text = interval.present.toString
-  
-  }
-  
-  //private
-  
 
-  def createDaySummaryReport(interval: IntervalResult) = {
+  }
+
+  private def dayType():Map[String, (Any) => Any] = {
+    val dt = DateTime
+    var curDay: Long = 0
+    Map(
+        ("setDayStr" , (dayStr: String) => {
+            curDay = dt.getDayValueInMs(dayStr)
+            true
+          }
+       ),
+        ("setDayMs" , (dayMs: Long) => {
+            curDay = dayMs
+            true
+          }
+       ),
+       ("isSaturday", () => {
+            dt.isSaturday(curDay)
+          }
+       ), 
+       ("isSunday", () => {
+            dt.isSunday(curDay)
+          }
+       ), 
+       ("isHoliday", () => {
+            //dt.isSunday(curDay)
+            false
+          }
+       ) 
+       
+
+    )
+//    
+//    def setDayLong(dayMs: Long) = {
+//      curDay = dayMs
+//    }
+//    def isSaturday: Boolean = {
+//      dt.isSaturday(curDay)
+//    }
+//    def isSunday: Boolean = {
+//      dt.isSunday(curDay)
+//    }
+  }
+
+  private def createDaySummaryReport(interval: IntervalResult) = {
     val daySumMap = interval.daySumMap
     val dayResultTableRowBuffer = DayResultHelper.dayResultTableRowBuffer(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
 
@@ -156,11 +197,43 @@ object ReportingHelper {
     }
 
     /*
+     * Holiday closures
+     */
+
+    /*
      * Table names
      */
     val dayCol = new TableColumn[DayResultTableRow, String] {
       text = "Day"
-      cellValueFactory = { _.value.day }
+      var isRed = false
+      cellValueFactory = { cellData =>
+        {
+          val dn = cellData.value.dayName.value
+          if (dn.trim().toLowerCase().startsWith("sun") ||
+            dn.trim().toLowerCase().startsWith("sat")) {
+            isRed = true
+          } else {
+            isRed = false
+          }
+          cellData.value.day
+        }
+      }
+
+      cellFactory = { i =>
+        //println(i.getCellValueFactory().)
+        val cell = new TableCell[DayResultTableRow, String]
+        cell.itemProperty().addListener(new ChangeListener[String] {
+          override def changed(obs: ObservableValue[_ <: String], oldItem: String, newItem: String): Unit = {
+            cell.setText(newItem)
+            if (isRed) {
+              cell.getStyleClass().add("not-workday")
+            } else {
+              cell.getStyleClass().remove("not-workday")
+            }
+          }
+        })
+        cell
+      }
     }
     val dayNameCol = new TableColumn[DayResultTableRow, String] {
       text = "Day Name"
@@ -172,34 +245,38 @@ object ReportingHelper {
     }
     val normalTime = new TableColumn[DayResultTableRow, String] {
       text = "NT"
-      cellValueFactory = {_.value.normalTime}
+      cellValueFactory = { _.value.normalTime }
     }
-    
+
     val wtMinusNT = new TableColumn[DayResultTableRow, String] {
       text = "WT-NT"
-      cellValueFactory = {_.value.diffWtNt}
+      cellValueFactory = { _.value.diffWtNt }
     }
-    
+
     val accWt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT"
-      cellValueFactory = {_.value.accWt}
+      cellValueFactory = { _.value.accWt }
     }
-    
+
     val accNt = new TableColumn[DayResultTableRow, String] {
       text = "AccNT"
-      cellValueFactory = {_.value.accNt}
+      cellValueFactory = { _.value.accNt }
     }
-    
+
     val diffAccWtNt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT-AccNT"
-      cellValueFactory = {_.value.diffAccWtNt}
+      cellValueFactory = { _.value.diffAccWtNt }
     }
-    
-    
 
     calendarTableView.columns ++= List(dayCol, dayNameCol, durationCol, normalTime, wtMinusNT, accWt, accNt, diffAccWtNt)
     tableViewBox.content = calendarTableView
     tableViewBox.requestLayout()
   }
+
+  def main(args: Array[String]): Unit = {
+    val d = dayType()
+    d()
+    ("setDayStr")("2015-01-03")
+    
 
 }
