@@ -146,48 +146,16 @@ object ReportingHelper {
 
   }
 
-  private def dayType():Map[String, (Any) => Any] = {
-    val dt = DateTime
-    var curDay: Long = 0
-    Map(
-        ("setDayStr" , (dayStr: String) => {
-            curDay = dt.getDayValueInMs(dayStr)
-            true
-          }
-       ),
-        ("setDayMs" , (dayMs: Long) => {
-            curDay = dayMs
-            true
-          }
-       ),
-       ("isSaturday", () => {
-            dt.isSaturday(curDay)
-          }
-       ), 
-       ("isSunday", () => {
-            dt.isSunday(curDay)
-          }
-       ), 
-       ("isHoliday", () => {
-            //dt.isSunday(curDay)
-            false
-          }
-       ) 
-       
-
-    )
-//    
-//    def setDayLong(dayMs: Long) = {
-//      curDay = dayMs
-//    }
-//    def isSaturday: Boolean = {
-//      dt.isSaturday(curDay)
-//    }
-//    def isSunday: Boolean = {
-//      dt.isSunday(curDay)
-//    }
+  private class DayType() {
+    private val dt = DateTime
+    private var _currentDay: Long = 0
+    def currentDay:Long = _currentDay   
+    def currentDay_=(value: Long):Unit = {_currentDay = value}
+    def currentDay_=(value: String):Unit = {_currentDay = dt.getDayValueInMs(value)}
+    def isSaturday = {dt.isSaturday(_currentDay)}
+    def isSunday = {dt.isSunday(_currentDay)}
   }
-
+  
   private def createDaySummaryReport(interval: IntervalResult) = {
     val daySumMap = interval.daySumMap
     val dayResultTableRowBuffer = DayResultHelper.dayResultTableRowBuffer(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
