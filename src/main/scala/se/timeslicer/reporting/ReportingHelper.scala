@@ -20,11 +20,18 @@ import scalafx.scene.control.TableCell
 import javafx.beans.value.ObservableStringValue
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
+import scalafx.Includes._
 
 /**
  * Reporting page object
  */
 object ReportingHelper {
+  /*---------------------
+   * DEFINITIONS
+   * --------------------
+   */
+  val dt = DateTime
+
   /*---------------
    * CONTROLS
    * --------------
@@ -58,12 +65,12 @@ object ReportingHelper {
    */
 
   private def init = {
+    startDayField.text = dt.currentDay
     if (startDayField.text.value == "") {
-      startDayField.text = DateTime.currentDay
     }
 
     if (endDayField.text.value == "") {
-      endDayField.text = DateTime.currentDay
+      endDayField.text = dt.currentDay
     }
   }
 
@@ -146,94 +153,188 @@ object ReportingHelper {
 
   }
 
-  private class DayType() {
-    private val dt = DateTime
-    private var _currentDay: Long = 0
-    def currentDay:Long = _currentDay   
-    def currentDay_=(value: Long):Unit = {_currentDay = value}
-    def currentDay_=(value: String):Unit = {_currentDay = dt.getDayValueInMs(value)}
-    def isSaturday = {dt.isSaturday(_currentDay)}
-    def isSunday = {dt.isSunday(_currentDay)}
-  }
-  
   private def createDaySummaryReport(interval: IntervalResult) = {
+    val dayType = new dt.DayType
     val daySumMap = interval.daySumMap
-    val dayResultTableRowBuffer = DayResultHelper.dayResultTableRowBuffer(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
+    val dayResultTableRowBuffer = DayResultHelper.dayResultTableRowBuffer(dt.getDayValueInMs(interval.start), dt.getDayValueInMs(interval.end), daySumMap)
 
     val calendarTableView = new TableView[DayResultTableRow](dayResultTableRowBuffer) {
       editable = false
     }
-
-    /*
-     * Holiday closures
+    /**
+     * handles the style
      */
+    def handleItemAndStyle(item: javafx.scene.control.TableCell[DayResultTableRow, String], text: String) = {
+      item.setText(text)
+      item.getStyleClass().remove("not-workday")
+      if (dayType.isSaturday || dayType.isSunday) {
+        item.getStyleClass().add("not-workday")
+      }
+    }
 
     /*
      * Table names
      */
     val dayCol = new TableColumn[DayResultTableRow, String] {
       text = "Day"
-      var isRed = false
       cellValueFactory = { cellData =>
         {
-          val dn = cellData.value.dayName.value
-          if (dn.trim().toLowerCase().startsWith("sun") ||
-            dn.trim().toLowerCase().startsWith("sat")) {
-            isRed = true
-          } else {
-            isRed = false
-          }
+          dayType.currentDay = cellData.value.day.value
           cellData.value.day
         }
       }
-
-      cellFactory = { i =>
-        //println(i.getCellValueFactory().)
-        val cell = new TableCell[DayResultTableRow, String]
-        cell.itemProperty().addListener(new ChangeListener[String] {
-          override def changed(obs: ObservableValue[_ <: String], oldItem: String, newItem: String): Unit = {
-            cell.setText(newItem)
-            if (isRed) {
-              cell.getStyleClass().add("not-workday")
-            } else {
-              cell.getStyleClass().remove("not-workday")
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
             }
           }
-        })
-        cell
+        }
       }
+
     }
+
     val dayNameCol = new TableColumn[DayResultTableRow, String] {
       text = "Day Name"
-      cellValueFactory = { _.value.dayName }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.dayName
+        }
+      }
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
     val durationCol = new TableColumn[DayResultTableRow, String] {
       text = "Hours"
-      cellValueFactory = { _.value.hours }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.hours
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
     val normalTime = new TableColumn[DayResultTableRow, String] {
       text = "NT"
-      cellValueFactory = { _.value.normalTime }
+      //cellValueFactory = { _.value.hours }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.normalTime
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
 
     val wtMinusNT = new TableColumn[DayResultTableRow, String] {
       text = "WT-NT"
-      cellValueFactory = { _.value.diffWtNt }
+      //cellValueFactory = { _.value.diffWtNt }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.diffWtNt
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
 
     val accWt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT"
-      cellValueFactory = { _.value.accWt }
+      //cellValueFactory = { _.value.accWt }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.accWt
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
 
     val accNt = new TableColumn[DayResultTableRow, String] {
       text = "AccNT"
-      cellValueFactory = { _.value.accNt }
+      //cellValueFactory = { _.value.accNt }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.accNt
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
 
     val diffAccWtNt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT-AccNT"
-      cellValueFactory = { _.value.diffAccWtNt }
+      //cellValueFactory = { _.value.diffAccWtNt }
+      cellValueFactory = { cellData =>
+        {
+          dayType.currentDay = cellData.value.day.value
+          cellData.value.diffAccWtNt
+        }
+      }
+
+      cellFactory = { column =>
+        {
+          new javafx.scene.control.TableCell[DayResultTableRow, String] {
+            override def updateItem(item: String, empty: Boolean) = {
+              handleItemAndStyle(this, item)
+            }
+          }
+        }
+      }
     }
 
     calendarTableView.columns ++= List(dayCol, dayNameCol, durationCol, normalTime, wtMinusNT, accWt, accNt, diffAccWtNt)
@@ -241,10 +342,11 @@ object ReportingHelper {
     tableViewBox.requestLayout()
   }
 
+  /**
+   * the main method cannot be run here since java fx is not
+   * initialized, get Toolkit not initialized
+   */
   def main(args: Array[String]): Unit = {
-    val d = dayType()
-    d()
-    ("setDayStr")("2015-01-03")
-    
+  }
 
 }

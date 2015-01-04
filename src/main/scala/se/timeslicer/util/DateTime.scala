@@ -33,7 +33,7 @@ object DateTime {
   }
 
   def getDecimalHours(minutes: Long): Double = {
-    return BigDecimal(minutes / 60.0).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+    BigDecimal(minutes / 60.0).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble    
   }
 
   def getNumberOfDaysInInterval(start: Long, end: Long): Int = {
@@ -49,7 +49,7 @@ object DateTime {
     c.setTime(new Date(day))
     c.get(Calendar.DAY_OF_WEEK)
   }
-  
+
   private def incrementor(initVal: Int): () => Int = {
     var startVal: Int = initVal
     () => {
@@ -106,37 +106,54 @@ object DateTime {
     }
     result
   }
-  
-  def isSaturday(day: Long):Boolean = {
+
+  def isSaturday(day: Long): Boolean = {
     weekDayNumber(day) == 7
     //dayName(day).trim().toLowerCase().startsWith("sat")
   }
-  def isSaturday(day: String):Boolean = {
-    isSaturday(getDayValueInMs(day)) 
+  def isSaturday(day: String): Boolean = {
+    isSaturday(getDayValueInMs(day))
   }
 
-  def isSunday(day: Long):Boolean = {
+  def isSunday(day: Long): Boolean = {
     weekDayNumber(day) == 1
     //dayName(day).trim().toLowerCase().startsWith("sun")
   }
-  def isSunday(day: String):Boolean = {
+  def isSunday(day: String): Boolean = {
     isSunday(getDayValueInMs(day))
   }
-  
-  
-  
+
+  class DayType() {
+    private val dt = DateTime
+    private var _currentDay: Long = 0
+    def currentDay: Long = _currentDay
+    def currentDay_=(value: Long): Unit = { _currentDay = value }
+    def currentDay_=(value: String): Unit = { _currentDay = dt.getDayValueInMs(value) }
+    def isSaturday = { dt.isSaturday(_currentDay) }
+    def isSunday = { dt.isSunday(_currentDay) }
+  }
+
   /**
    * the main function is only used for tests
    */
   def main(args: Array[String]) {
+    val dt = new DayType
+    dt.currentDay = "2015-01-03"
+    println(dt.isSaturday)
+    println(dt.isSunday)
+
+    dt.currentDay = "2015-01-04"
+    println(dt.isSaturday)
+    println(dt.isSunday)
+
     
-    println(isSaturday("2015-01-03"))
-    println(isSaturday("2015-01-04"))
     
-    println(isSunday("2015-01-04"))
-    println(isSunday("2015-01-05"))
-    
-    
-    
+//    
+//    println(isSaturday("2015-01-03"))
+//    println(isSaturday("2015-01-04"))
+//
+//    println(isSunday("2015-01-04"))
+//    println(isSunday("2015-01-05"))
+//
   }
 }

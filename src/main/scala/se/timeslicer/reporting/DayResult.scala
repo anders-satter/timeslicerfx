@@ -72,11 +72,12 @@ object DayResultHelper {
        * calculate the sum of the day
        */
       var daySumMnts = 0
-      var daySumHrs: Double = 0.0
+      var daySumHrs: Double = 0.00
       if (daySumMap.contains(calDay.dayValue)) {
         val part = daySumMap(calDay.dayValue)
         daySumMnts = part.intValue()
         daySumHrs = DateTime.getDecimalHours(part.intValue)
+        
       }
       val normalTime: Double = DateTime.dayNormalTime(calDay.dayValue)
       val diffWtNt: Double = daySumHrs - normalTime
@@ -85,7 +86,7 @@ object DayResultHelper {
       val diffAccWtNt: Double = accumulatedWorkedTime - accumulatedNormalTime
       val iu = ItemUtil
       DayResult(calDay, daySumMnts,
-        daySumHrs,
+        iu.round2(daySumHrs),
         iu.round2(normalTime),
         iu.round2(diffWtNt),
         iu.round2(accumulatedWorkedTime),
@@ -100,7 +101,7 @@ object DayResultHelper {
     dayResult.map(item => {
       observableBuffer += new DayResultTableRow(item.day.day, 
           item.day.name,
-          item.durationHrs.toString, 
+          String.valueOf(item.durationHrs), 
           item.normalTime.toString, 
           item.diffWtNt.toString, 
           item.accWt.toString, 
