@@ -84,6 +84,14 @@ object RegisterTimeItem {
     dateField.text = DateTime.currentDay
     projectField.text = projectName
     activityField.text = activityName
+    if (lastSavedTime == "") {
+      //
+      /**
+       * getLatestLoggedItem
+       * if it was made today, get its
+       * end time and put it in the end time box
+       */
+    }
     startTimeField.text = lastSavedTime
     endTimeField.text = DateTime.currentTime
 

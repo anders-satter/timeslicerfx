@@ -45,6 +45,13 @@ object TimeslicerMain extends JFXApp {
   Settings.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
   Settings.loadProperties
   InputHelper.loadProjects
+  /*
+   * go through logs to find last item and see
+   * if it is from today, the extract the date and 
+   * use the time in registration of items
+   */
+  
+  
 
   /*
    * --------

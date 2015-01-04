@@ -8,6 +8,7 @@ import se.timeslicer.reporting.IntervalResult
 import se.timeslicer.reporting.Project
 import se.timeslicer.util.DateTime
 import se.timeslicer.util.ItemUtil
+import se.timeslicer.settings.Settings
 
 /**
  * Test the different parts of the application
@@ -22,6 +23,10 @@ object Test {
       DateTime.getDayValueInMs("2014-11-23 09:00"))
   }
 
+  /*
+   * load settings
+   */
+  Settings.loadProperties
   /*
    * Try and read from the logs 
    */
@@ -64,7 +69,7 @@ object Test {
    * SUMMARY OF EACH DAY
    */
     val daySumMap = interval.daySumMap
-    println(daySumMap)
+    //println(daySumMap)
 
     /*
    * CALENDAR
@@ -76,7 +81,7 @@ object Test {
 
     //val calDayList = DayResultHelper.calendarDayList(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end))
     //calDayList.map(println)
-    val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
+   val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
 
     dayResultList.map(println)
 

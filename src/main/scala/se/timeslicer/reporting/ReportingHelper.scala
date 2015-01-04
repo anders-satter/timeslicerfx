@@ -50,7 +50,9 @@ object ReportingHelper {
    * when the table is empty
    * This is instantiated in createCalendarTableView
    */
-  private val tableViewBox: VBox = new VBox {}
+  private val tableViewBox: VBox = new VBox {
+    prefHeight = 1000
+  }
 
   /*----------------
    * VARIABLES
@@ -160,15 +162,21 @@ object ReportingHelper {
 
     val calendarTableView = new TableView[DayResultTableRow](dayResultTableRowBuffer) {
       editable = false
+      prefHeight = 1000
     }
     /**
      * handles the style
      */
     def handleItemAndStyle(item: javafx.scene.control.TableCell[DayResultTableRow, String], text: String) = {
       item.setText(text)
-      item.getStyleClass().remove("not-workday")
-      if (dayType.isSaturday || dayType.isSunday) {
-        item.getStyleClass().add("not-workday")
+      item.getStyleClass().remove("holiday")
+      item.getStyleClass().remove("saturday")
+
+      if (dayType.isSunday) {
+        item.getStyleClass().add("holiday")
+      }
+      if (dayType.isSaturday) {
+        item.getStyleClass().add("saturday")
       }
     }
 
@@ -189,14 +197,15 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER)
           }
         }
       }
-
     }
 
     val dayNameCol = new TableColumn[DayResultTableRow, String] {
       text = "Day Name"
+      prefWidth = 70
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -209,12 +218,14 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER)
           }
         }
       }
     }
     val durationCol = new TableColumn[DayResultTableRow, String] {
       text = "Hours"
+      prefWidth = 50
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -228,12 +239,14 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
     }
     val normalTime = new TableColumn[DayResultTableRow, String] {
       text = "NT"
+      prefWidth = 50
       //cellValueFactory = { _.value.hours }
       cellValueFactory = { cellData =>
         {
@@ -248,6 +261,7 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
@@ -255,7 +269,7 @@ object ReportingHelper {
 
     val wtMinusNT = new TableColumn[DayResultTableRow, String] {
       text = "WT-NT"
-      //cellValueFactory = { _.value.diffWtNt }
+      prefWidth = 65
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -269,6 +283,7 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
@@ -276,7 +291,7 @@ object ReportingHelper {
 
     val accWt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT"
-      //cellValueFactory = { _.value.accWt }
+      prefWidth = 65
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -290,6 +305,7 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
@@ -297,7 +313,7 @@ object ReportingHelper {
 
     val accNt = new TableColumn[DayResultTableRow, String] {
       text = "AccNT"
-      //cellValueFactory = { _.value.accNt }
+      prefWidth = 65
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -311,6 +327,7 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
@@ -318,7 +335,8 @@ object ReportingHelper {
 
     val diffAccWtNt = new TableColumn[DayResultTableRow, String] {
       text = "AccWT-AccNT"
-      //cellValueFactory = { _.value.diffAccWtNt }
+      prefWidth = 100
+
       cellValueFactory = { cellData =>
         {
           dayType.currentDay = cellData.value.day.value
@@ -332,6 +350,7 @@ object ReportingHelper {
             override def updateItem(item: String, empty: Boolean) = {
               handleItemAndStyle(this, item)
             }
+            setAlignment(Pos.CENTER_RIGHT)
           }
         }
       }
@@ -339,6 +358,7 @@ object ReportingHelper {
 
     calendarTableView.columns ++= List(dayCol, dayNameCol, durationCol, normalTime, wtMinusNT, accWt, accNt, diffAccWtNt)
     tableViewBox.content = calendarTableView
+    tableViewBox.prefHeight = 1000
     tableViewBox.requestLayout()
   }
 

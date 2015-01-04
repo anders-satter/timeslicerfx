@@ -7,8 +7,12 @@
 
 
 
-.not-workday {
-    -fx-background-color: rgb(147, 100, 100);
+.holiday {
+    -fx-background-color: #FE642E;
+}
+
+.saturday {
+    -fx-background-color: #F5DA81;
 }
 
 

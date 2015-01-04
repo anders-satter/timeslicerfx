@@ -34,7 +34,8 @@ object Settings {
   def specialWorkdays = _specialWorkdays
 
   def loadProperties = {
-    val filename = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/settings.properties"
+    //val filename = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/settings.properties"
+    val filename = "settings.properties"
     var properties: Properties = new Properties
     properties.load(new FileInputStream(filename))    
     /*
