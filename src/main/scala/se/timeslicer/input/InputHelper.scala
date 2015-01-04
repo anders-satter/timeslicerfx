@@ -5,6 +5,9 @@ import se.timeslicer.file.FileUtil
 import scalafx.collections.ObservableBuffer
 import se.timeslicer.ui.conversions.Conversion
 import se.timeslicer.settings.Settings
+import se.timeslicer.util.ItemUtil
+import se.timeslicer.util.DateTime
+import se.timeslicer.log.Item
 
 case class InputProject(name: String, activities: ListBuffer[InputActivity])
 case class InputActivity(name: String)
@@ -14,7 +17,7 @@ case class InputActivity(name: String)
  * projects and activities
  */
 object InputHelper {
-  
+  val dt = DateTime  
   private var _currentProjectBuffer: ListBuffer[InputProject] = null
   def currentProjectBuffer = _currentProjectBuffer
   def currentProjectBuffer_=(value: ListBuffer[InputProject]): Unit = _currentProjectBuffer = value
@@ -130,12 +133,28 @@ object InputHelper {
     }
   }
 
+  /**
+   * finds the last logged item if it is today
+   * otherwise it will set the current time
+   */
+  def getLastLoggedItem = {
+    var time = dt.currentTime
+    val logLines = FileUtil.readFromFile(Settings.logFileName)
+    val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.end).filter(_.dayValue==dt.getDayValueInMs(dt.currentDay))
+    //itemList.map(println)
+    var res:Item = null     
+    if (itemList != null && itemList.length >0) {
+      time = dt.getTimePart(itemList(itemList.length-1).end)
+    }
+    time
+  }
   
   /**
    * this main method is only used for testing.
    */
   def main(args: Array[String]): Unit = {
-    Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    //Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    Settings.loadProperties
     loadProjects
   }
 }

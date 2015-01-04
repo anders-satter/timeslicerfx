@@ -74,6 +74,11 @@ object DateTime {
   def currentTime = {
     formatTime.format(Calendar.getInstance.getTime())
   }
+  
+  def getTimePart(time: String) = {
+    val parsedDate = format.parse(time)
+    parsedDate.getHours + ":"+ parsedDate.getMinutes
+  }
 
   def currentDay = {
     formatDay.format(Calendar.getInstance.getTime())
@@ -137,15 +142,16 @@ object DateTime {
    * the main function is only used for tests
    */
   def main(args: Array[String]) {
-    val dt = new DayType
-    dt.currentDay = "2015-01-03"
-    println(dt.isSaturday)
-    println(dt.isSunday)
+//    val dt = new DayType
+//    dt.currentDay = "2015-01-03"
+//    println(dt.isSaturday)
+//    println(dt.isSunday)
+//
+//    dt.currentDay = "2015-01-04"
+//    println(dt.isSaturday)
+//    println(dt.isSunday)
 
-    dt.currentDay = "2015-01-04"
-    println(dt.isSaturday)
-    println(dt.isSunday)
-
+      println(getTimePart("2015-01-04 20:36"))
     
     
 //    

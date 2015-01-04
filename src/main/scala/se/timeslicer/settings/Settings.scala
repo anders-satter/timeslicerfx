@@ -16,16 +16,15 @@ object Settings {
   
   private var _logFileName: String = ""
   def logFileName = _logFileName
-  def logFileName_=(value: String): Unit = _logFileName = value
+  private def logFileName_=(value: String): Unit = _logFileName = value
 
   private var _projectFileName: String = ""
   def projectFileName = _projectFileName
-  def projectFileName_=(value: String): Unit = _projectFileName = value
+  private def projectFileName_=(value: String): Unit = _projectFileName = value
 
   private var _settingsFileName: String = ""
   def settingsFileName = _settingsFileName
-  def settingsFileName_=(value: String): Unit = _settingsFileName = value
-
+  private def settingsFileName_=(value: String): Unit = _settingsFileName = value
   
   private val _propertiesMap: HashMap[Any, String] = new HashMap()
   def propertiesMap = _propertiesMap
@@ -34,10 +33,9 @@ object Settings {
   def specialWorkdays = _specialWorkdays
 
   def loadProperties = {
-    //val filename = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/settings.properties"
-    val filename = "settings.properties"
+    settingsFileName = "settings.properties"
     var properties: Properties = new Properties
-    properties.load(new FileInputStream(filename))    
+    properties.load(new FileInputStream(settingsFileName))    
     /*
      * NB the propNames list is only traversable ONCE!
      * 
@@ -52,7 +50,9 @@ object Settings {
       if (DateTime.isDay(item.toString)) {
         _specialWorkdays += (item.toString() -> (properties.getProperty(item.toString)).toDouble)
       }      
-    })  
+    }) 
+    logFileName = propertiesMap("LogFileName")
+    projectFileName = propertiesMap("ProjectFileName")
   }
   
   /**
@@ -67,5 +67,7 @@ object Settings {
     println(propertiesMap)
     println(specialWorkdays)
     println(isCalculable("Lunch"))
+    println(logFileName)
+    println(projectFileName)
   }
 }

@@ -35,7 +35,9 @@ object HiddenSplitPaneSample extends JFXApp {
 
   val listView = new ListView[String] {
     maxWidth = 200
-    Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    
+    //Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
+    Settings.loadProperties
     items = Conversion.getObservableBuffer(InputHelper.loadProjects.map(_.name).toSeq)
     selectionModel().setSelectionMode(SelectionMode.SINGLE)
   }

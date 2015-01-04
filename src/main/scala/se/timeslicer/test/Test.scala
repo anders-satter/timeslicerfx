@@ -9,6 +9,7 @@ import se.timeslicer.reporting.Project
 import se.timeslicer.util.DateTime
 import se.timeslicer.util.ItemUtil
 import se.timeslicer.settings.Settings
+import se.timeslicer.input.InputHelper
 
 /**
  * Test the different parts of the application
@@ -60,10 +61,10 @@ object Test {
       new Project(entry._1, entry._2)
     })
 
-    println(interval.projectList)
+    //println(interval.projectList)
     interval.projectList.foreach(_.compile)
     interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
-    println(interval.present.toString)
+    //println(interval.present.toString)
 
     /*
    * SUMMARY OF EACH DAY
@@ -83,7 +84,9 @@ object Test {
     //calDayList.map(println)
    val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
 
-    dayResultList.map(println)
+    //dayResultList.map(println)
+    println("getLoggedItem")
+    println(InputHelper.getLastLoggedItem)
 
   } else {
     println("No items found")

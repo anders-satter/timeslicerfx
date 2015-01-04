@@ -116,7 +116,7 @@ object ReportingHelper {
   }
 
   private def getIntervalResult: IntervalResult = {
-    val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
+    val logLines = FileUtil.readFromFile(Settings.logFileName)
 
     val interval = new IntervalResult()
     interval.start = currentStartDay

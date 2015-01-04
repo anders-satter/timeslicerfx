@@ -41,8 +41,6 @@ object TimeslicerMain extends JFXApp {
   var currentProject = ""
   var currentActivity = ""
   var isRegisterPage = true
-  Settings.projectFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/prj.txt"
-  Settings.logFileName = "/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt"
   Settings.loadProperties
   InputHelper.loadProjects
   /*
@@ -50,8 +48,6 @@ object TimeslicerMain extends JFXApp {
    * if it is from today, the extract the date and 
    * use the time in registration of items
    */
-  
-  
 
   /*
    * --------
@@ -209,4 +205,9 @@ object TimeslicerMain extends JFXApp {
     }
   }
 }
-
+//
+//object TimeslicerMain {
+//   def main(args: Array[String]) {
+//        TimeslicerMain.launch(classOf[TimeslicerMain], args: _*)
+//    }
+//}

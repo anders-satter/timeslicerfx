@@ -92,7 +92,8 @@ object RegisterTimeItem {
        * end time and put it in the end time box
        */
     }
-    startTimeField.text = lastSavedTime
+    //startTimeField.text = lastSavedTime
+    startTimeField.text = InputHelper.getLastLoggedItem
     endTimeField.text = DateTime.currentTime
 
     val dialogStage = new Stage {
