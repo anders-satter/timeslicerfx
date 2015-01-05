@@ -39,7 +39,7 @@ object ReportingHelper {
   private val startDayLabel = new Label { text = "Start Day:" }
   private val startDayField = new TextField { text = "2013-11-01" }
   private val endDayLabel = new Label { text = "End Day:" }
-  private val endDayField = new TextField { text = "2013-12-31" }
+  private val endDayField = new TextField { text = "" }
   private val submitButton = ControlFactory.button("Submit", generateReport)
   private val summaryTextArea = new TextArea {
     text = ""

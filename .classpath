@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/scala"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/controlsfx-8.20.8.jar"/>
+	<classpathentry kind="lib" path="lib/openjfx-dialogs-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/scalafx_2.11-8.0.20-R6.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

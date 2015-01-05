@@ -6,6 +6,7 @@ object ItemUtil {
   def parseLogItem(logLine:String):Item = {
     if (logLine.length() > 0){
     	val parts = logLine.split('\t');
+    	//println(logLine)
     	return Item(parts(0),
     	    parts(1),
     	    parts(3).replaceAll("\"", ""), 

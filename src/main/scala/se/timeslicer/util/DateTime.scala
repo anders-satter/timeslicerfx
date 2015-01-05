@@ -77,7 +77,8 @@ object DateTime {
   
   def getTimePart(time: String) = {
     val parsedDate = format.parse(time)
-    parsedDate.getHours + ":"+ parsedDate.getMinutes
+    formatTime.format(parsedDate)
+    //parsedDate.getHours + ":"+ parsedDate.getMinutes
   }
 
   def currentDay = {
@@ -122,8 +123,7 @@ object DateTime {
 
   def isSunday(day: Long): Boolean = {
     weekDayNumber(day) == 1
-    //dayName(day).trim().toLowerCase().startsWith("sun")
-  }
+    dayName(day).trim().toLowerCase().startsWith("sun")  }
   def isSunday(day: String): Boolean = {
     isSunday(getDayValueInMs(day))
   }
@@ -151,7 +151,7 @@ object DateTime {
 //    println(dt.isSaturday)
 //    println(dt.isSunday)
 
-      println(getTimePart("2015-01-04 20:36"))
+      println(getTimePart("2015-01-04 08:36"))
     
     
 //    
