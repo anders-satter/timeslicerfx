@@ -123,7 +123,8 @@ object DateTime {
 
   def isSunday(day: Long): Boolean = {
     weekDayNumber(day) == 1
-    dayName(day).trim().toLowerCase().startsWith("sun")  }
+    //dayName(day).trim().toLowerCase().startsWith("sun")  
+  }
   def isSunday(day: String): Boolean = {
     isSunday(getDayValueInMs(day))
   }
