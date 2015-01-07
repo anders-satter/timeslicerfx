@@ -31,7 +31,7 @@ object Test {
   /*
    * Try and read from the logs 
    */
-  val logLines = FileUtil.readFromFile("/Users/anders/dev/eclipse_ws1/TimeslicerFX/data/log.txt")
+  val logLines = FileUtil.readFromFile("data/log.txt", Settings.propertiesMap("ProjectFileEncoding"))
   /*
    * create a list of items
    */

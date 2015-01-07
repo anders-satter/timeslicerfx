@@ -28,7 +28,7 @@ object InputHelper {
    * them into an array of strings
    */
   private def readProjectsFromFile: Array[String] = {
-    FileUtil.readFromFile(Settings.projectFileName)
+    FileUtil.readFromFile(Settings.projectFileName, Settings.propertiesMap("ProjectFileEncoding"))
   }
 
   def loadProjects: ListBuffer[InputProject] = {
@@ -139,7 +139,7 @@ object InputHelper {
    */
   def getLastLoggedItem = {
     var time = dt.currentTime
-    val logLines = FileUtil.readFromFile(Settings.logFileName)
+    val logLines = FileUtil.readFromFile(Settings.logFileName, Settings.propertiesMap("LogFileEncoding"))
     val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.end).filter(_.dayValue==dt.getDayValueInMs(dt.currentDay))
     //itemList.map(println)
     var res:Item = null     

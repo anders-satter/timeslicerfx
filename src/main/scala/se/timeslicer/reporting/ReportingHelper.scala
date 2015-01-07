@@ -116,7 +116,7 @@ object ReportingHelper {
   }
 
   private def getIntervalResult: IntervalResult = {
-    val logLines = FileUtil.readFromFile(Settings.logFileName)
+    val logLines = FileUtil.readFromFile(Settings.logFileName, Settings.propertiesMap("LogFileEncoding"))
 
     val interval = new IntervalResult()
     interval.start = currentStartDay

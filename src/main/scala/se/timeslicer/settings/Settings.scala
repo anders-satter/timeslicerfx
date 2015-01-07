@@ -69,5 +69,6 @@ object Settings {
     println(isCalculable("Lunch"))
     println(logFileName)
     println(projectFileName)
+    
   }
 }
