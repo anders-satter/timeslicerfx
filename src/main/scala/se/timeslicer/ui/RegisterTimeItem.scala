@@ -70,7 +70,6 @@ object RegisterTimeItem {
 
   def createItemString: String = {
     val str: StringBuilder = new StringBuilder()
-    str.append('\n')
     str.append(dateField.text.value + " " + startTimeField.text.value + '\t')
     str.append(dateField.text.value + " " + endTimeField.text.value + '\t')
     str.append("0" + '\t')

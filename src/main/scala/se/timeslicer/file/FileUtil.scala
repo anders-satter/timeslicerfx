@@ -4,6 +4,8 @@ import java.io.FileWriter
 import java.io.InputStream
 import java.io.FileInputStream
 import scala.util.Properties
+import java.io.BufferedWriter
+import java.io.PrintWriter
 
 /**
  * Different file reading routines, to be used
@@ -13,18 +15,16 @@ object FileUtil {
   /**
    * Returning lines from a text file
    */
-//  def readFromFile(filename: String): Array[String] = {
-//    //println(Properties.encodingString)
-//    //Source.fromFile(filename).getLines.toArray
-//    toSource(new FileInputStream(filename),Properties.encodingString).getLines.toArray
-//  }
-  
+  //  def readFromFile(filename: String): Array[String] = {
+  //    //println(Properties.encodingString)
+  //    //Source.fromFile(filename).getLines.toArray
+  //    toSource(new FileInputStream(filename),Properties.encodingString).getLines.toArray
+  //  }
+
   def readFromFile(filename: String, encoding: String): Array[String] = {
     println(Properties.encodingString)
-    toSource(new FileInputStream(filename),encoding).getLines.toArray
+    toSource(new FileInputStream(filename), encoding).getLines.toArray
   }
-  
-  
 
   /**
    * Saving a text file, if append=true the text will be appended
@@ -32,11 +32,20 @@ object FileUtil {
    */
   def saveToFile(filename: String, content: String, append: Boolean) = {
     val fw = new FileWriter(filename, append)
-    fw.write(content)
-    fw.close
+    val out = new PrintWriter(new BufferedWriter(fw))
+    if (fw != null) {
+      try {
+        out.println(content)
+      } catch {
+        case ex: Exception => {
+          println("Exception " + ex.getMessage + " thrown while saving to file")
+        }
+      } finally {
+        out.close()
+      }
+    }
   }
 
-  
   def toSource(inputStream: InputStream, decoding: String): scala.io.BufferedSource = {
     import java.nio.charset.Charset
     import java.nio.charset.CodingErrorAction
