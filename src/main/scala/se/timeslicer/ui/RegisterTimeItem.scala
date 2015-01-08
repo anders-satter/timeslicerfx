@@ -98,7 +98,7 @@ object RegisterTimeItem {
     val dialogStage = new Stage {
       outer => {
         width = 200
-        height = 300
+        height = 350
         title = "Register Time Item"
         scene = new Scene {
           root = new VBox {
