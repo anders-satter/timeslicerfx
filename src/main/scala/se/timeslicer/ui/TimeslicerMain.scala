@@ -22,6 +22,7 @@ import se.timeslicer.ui.conversions.Conversion
 import se.timeslicer.util.FXUtils
 import se.timeslicer.reporting.ReportingHelper
 import se.timeslicer.settings.Settings
+import scalafx.scene.image.Image
 
 /**
  * Main entry for the Timeslicer application
@@ -188,7 +189,6 @@ object TimeslicerMain extends JFXApp {
   val contentBox = new VBox {
     content = registerItemPage
     autosize()
-    
   }
 
   stage = new JFXApp.PrimaryStage {
@@ -196,6 +196,7 @@ object TimeslicerMain extends JFXApp {
     width = 600
     height = 550
     scene = new Scene {
+      icons += new Image("timeslicer_app.png") 
       root = {
         stylesheets += globalTextFormatting
         new VBox {
