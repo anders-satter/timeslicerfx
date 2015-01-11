@@ -70,7 +70,6 @@ object RegisterTimeItem {
 
   def createItemString: String = {
     val str: StringBuilder = new StringBuilder()
-    str.append('\n')
     str.append(dateField.text.value + " " + startTimeField.text.value + '\t')
     str.append(dateField.text.value + " " + endTimeField.text.value + '\t')
     str.append("0" + '\t')
@@ -99,7 +98,7 @@ object RegisterTimeItem {
     val dialogStage = new Stage {
       outer => {
         width = 200
-        height = 300
+        height = 350
         title = "Register Time Item"
         scene = new Scene {
           root = new VBox {
