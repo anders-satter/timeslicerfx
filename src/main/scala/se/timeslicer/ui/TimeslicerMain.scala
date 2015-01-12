@@ -196,7 +196,7 @@ object TimeslicerMain extends JFXApp {
     width = 600
     height = 550
     scene = new Scene {
-      icons += new Image("timeslicer_app.png") 
+      icons += new Image("timeslicer_app.png")
       root = {
         stylesheets += globalTextFormatting
         new VBox {
