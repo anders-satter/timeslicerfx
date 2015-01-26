@@ -206,6 +206,7 @@ object TimeslicerMain extends JFXApp {
     }
   }
 }
+
 //
 //object TimeslicerMain {
 //   def main(args: Array[String]) {
