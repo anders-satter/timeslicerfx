@@ -49,7 +49,6 @@ object TimeslicerMain extends JFXApp {
    * if it is from today, the extract the date and 
    * use the time in registration of items
    */
-
   /*
    * --------
    * CONTROLS
@@ -206,6 +205,7 @@ object TimeslicerMain extends JFXApp {
     }
   }
 }
+
 //
 //object TimeslicerMain {
 //   def main(args: Array[String]) {
