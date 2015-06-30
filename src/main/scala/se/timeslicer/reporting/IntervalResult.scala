@@ -53,6 +53,15 @@ class IntervalResult {
     strBuffer.append("-----------------------------------" + '\n')
     strBuffer.append("Total time: " + DateTime.getDecimalHours(totalTime))
   }
+  
+  /**
+   * Present in linear fashion
+   */
+  def presentLinear:StringBuilder = {
+    val strBuffer = new StringBuilder()
+    projectList.foreach(_.presentLinear(totalTime, strBuffer)) 
+    strBuffer
+  }
 
   /**
    * returns a map of (dayValue:Long, sumOfDurationForTheDay:Long) items

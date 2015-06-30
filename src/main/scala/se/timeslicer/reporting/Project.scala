@@ -49,9 +49,11 @@ class Project(val name: String, val items: Array[Item]) {
   
   def present(totalTimeInInterval:Long, strBuffer:StringBuilder) = {
     val indent2 = "  ";
+    //First write the project...
     strBuffer.append(this.name + " " + 
         DateTime.getDecimalHours(this.totalTime) +" (" + 
-        ItemUtil.percent(this.totalTime,totalTimeInInterval, 2)+ "%)" + '\n') 
+        ItemUtil.percent(this.totalTime,totalTimeInInterval, 2)+ "%)" + '\n')
+    //...then for each activity, indent ad write the activities
     this.activities.foreach(a => {
       strBuffer.append(indent2 + a.name +" " + 
           DateTime.getDecimalHours(a.totalTime)+ " (" +
@@ -59,4 +61,9 @@ class Project(val name: String, val items: Array[Item]) {
     })
   }
   
+  def presentLinear(totTimeInterval:Long, strBuffer:StringBuilder) = {
+    this.activities.foreach(activity => {
+       strBuffer.append(Padder.padd(this.name, 30) + " " + Padder.padd(activity.name, 30) + " " +Padder.padd(String.valueOf(DateTime.getDecimalHours(activity.totalTime)),6) + '\n')
+    })
+  }
 }

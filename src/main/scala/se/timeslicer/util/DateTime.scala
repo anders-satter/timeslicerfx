@@ -6,6 +6,7 @@ import java.util.Locale
 import se.timeslicer.reporting.CalendarDay
 import java.util.Calendar
 import se.timeslicer.settings.Settings
+import scala.collection.mutable.ListBuffer
 
 /**
  * Holds the the calendar day
@@ -50,8 +51,8 @@ object DateTime {
     c.get(Calendar.DAY_OF_WEEK)
   }
 
-  private def incrementor(initVal: Int): () => Int = {
-    var startVal: Int = initVal
+  private def incrementor(initVal: Long): () => Long = {
+    var startVal = initVal
     () => {
       startVal = startVal + 1
       startVal
@@ -129,6 +130,8 @@ object DateTime {
     isSunday(getDayValueInMs(day))
   }
 
+  val OneDayMs = 86400000
+  
   class DayType() {
     private val dt = DateTime
     private var _currentDay: Long = 0
@@ -137,6 +140,22 @@ object DateTime {
     def currentDay_=(value: String): Unit = { _currentDay = dt.getDayValueInMs(value) }
     def isSaturday = { dt.isSaturday(_currentDay) }
     def isSunday = { dt.isSunday(_currentDay) }
+  }
+  
+
+  /**
+   * list of dates from start date
+   * to end date inclusive
+   */
+  def getDayList(startDay:String, endDay:String):Array[String] = {
+    val start = getDayValueInMs(startDay)
+    val end = getDayValueInMs(endDay)
+    val buffer = new ListBuffer[String]
+    //buffer += getDayValueInStr(start) 
+    for(dayValue <- start to end by OneDayMs){
+      buffer += getDayValueInStr(dayValue)
+    }   
+    return buffer.toArray[String]
   }
 
   /**
@@ -152,7 +171,7 @@ object DateTime {
 //    println(dt.isSaturday)
 //    println(dt.isSunday)
 
-      println(getTimePart("2015-01-04 08:36"))
+      //println(getTimePart("2015-01-04 08:36"))
     
     
 //    
@@ -162,5 +181,39 @@ object DateTime {
 //    println(isSunday("2015-01-04"))
 //    println(isSunday("2015-01-05"))
 //
+      
+     val d = 0
+     val startDate = "2015-06-01"
+     val stMs = getDayValueInMs(startDate)
+     //println(stMs)
+     val nextDay = stMs + OneDayMs
+     //println(getDayValueInStr(nextDay))
+     
+     
+     
+//     val inc1 = incrementor(d)
+//     println(inc1())
+//     println(inc1())
+//     println(inc1())
+//     println(inc1())
+//     println(inc1())
+//     
+    
+     val dayList = getDayList("2015-06-01", "2015-06-30")
+     dayList.foreach(i =>println(i))
+     
+     
+     
+     //println(getDayValueInMs(startDate))
+     
+     
+//     val inc = incrementor2(2)
+//     println(inc("next")())
+//     println(inc("next")())
+//     println(inc("next")())
+//     println(inc("next")())
+//     println(inc("next")())
+//     println(inc("next")())
+//     //println(inc.next()) 
   }
 }

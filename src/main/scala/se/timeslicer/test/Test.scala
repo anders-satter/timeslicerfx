@@ -39,8 +39,8 @@ object Test {
   val interval = new IntervalResult()
   //  interval.start = "2014-12-29"
   //  interval.end = "2014-12-30"
-  interval.start = "2013-11-01"
-  interval.end = "2013-11-30"
+  interval.start = "2015-06-01"
+  interval.end = "2015-06-30"
 
   val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
 
