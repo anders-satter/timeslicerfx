@@ -100,8 +100,8 @@ object WeeklyReporting {
 
   //find all items for one day
 
-  val startDate = "2015-06-01"
-  val endDate = "2015-06-07"
+  val startDate = "2015-06-29"
+  val endDate = "2015-06-30"
 
   //is in day span
   val start = dt.getDayValueInMs(startDate)
@@ -120,7 +120,8 @@ object WeeklyReporting {
    */
 
     //itemNames.map(println)
-    val matrix = Array.ofDim[String](itemNames.keys.size + 2, dateList.length + 1)
+    //setting the matrix size with respect to titles and sums (+2)
+    val matrix = Array.ofDim[String](itemNames.keys.size + 2, dateList.length + 2)
 
     matrix(0)(0) = Padder.padd("Code", 50)
 
@@ -165,13 +166,70 @@ object WeeklyReporting {
     })
 
     
-    //set the sums
+
+    /*
+     * set the sums
+     */
+    val dateListLen = dateList.length;
+    val itemNameLen = itemNames.keys.size
+    val sumRow = itemNameLen + 1 
+    val sumCol = dateListLen + 1
+    
+    /*
+     * day sums
+     */
+    for (i <- 1 to dateListLen){
+      var currentSum = 0.0
+      for (j <- 1 to itemNameLen){
+        currentSum += matrix(j)(i).toDouble
+      }  
+      matrix(sumRow)(i) = Padder.padd(String.valueOf(currentSum),10)      
+    }
+    
+    /*
+     * prj|act sums 
+     */
+    matrix(0)(sumCol) = Padder.padd("SUM", 10)
+    
+    for (i <- 1 to itemNameLen){
+      var currentSum = 0.0
+      for (j <- 1 to dateListLen){
+        currentSum += matrix(i)(j).toDouble
+      }
+      matrix(i)(sumCol) = Padder.padd(String.valueOf(currentSum),10)
+    }
+    
+    /*
+     * calculate the sum of sums
+     */
+    
+    // 1. sum of prj|act
+    var prjActPeriodSum = 0.0 
+    for (i <- 1 to itemNameLen){
+      prjActPeriodSum += matrix(i)(sumCol).toDouble
+    }
+    
+    // 2. sum of day
+    var daySum = 0.0
+    for (i <- 1 to dateListLen){
+      daySum += matrix(sumRow)(i).toDouble
+    }
+    
+    
+    println("Diff days - code sums: " + (daySum - prjActPeriodSum))
+    
+    matrix(sumRow)(sumCol) = String.valueOf(prjActPeriodSum) 
     
     
     
     
+
+    
+    /*
+     * print the stuff
+     */
     val nSz = itemNames.keys.size+1
-    val dateSz = dateList.length
+    val dateSz = dateList.length+1
 
     for (i <- 0 to nSz) {
       for (j <- 0 to dateSz) {
