@@ -101,11 +101,12 @@ object WeeklyReporting {
   //find all items for one day
 
   val startDate = "2015-06-01"
-  val endDate = "2015-06-30"
+  val endDate = "2015-06-07"
 
   //is in day span
   val start = dt.getDayValueInMs(startDate)
   val end = dt.getDayValueInMs(endDate)
+  
   val itemsInRange = prjList.filter(i => i.dateValue >= start && i.dateValue <= end && i.name != "Annat|Lunch")
 
   val dateList = dt.getDayList(startDate, endDate)
@@ -119,7 +120,7 @@ object WeeklyReporting {
    */
 
     //itemNames.map(println)
-    val matrix = Array.ofDim[String](itemNames.keys.size + 1, dateList.length + 1)
+    val matrix = Array.ofDim[String](itemNames.keys.size + 2, dateList.length + 1)
 
     matrix(0)(0) = Padder.padd("Code", 50)
 
@@ -136,9 +137,8 @@ object WeeklyReporting {
       matrix(rowNum)(0) = Padder.padd(i._1, 50)
       rowNum += 1
     })
+    matrix(rowNum)(0) = Padder.padd("SUM", 50)
 
-    
-        
     //run through the list of dates, if we find a
     var colNum = 1
     dateList.foreach(i => {
@@ -164,7 +164,13 @@ object WeeklyReporting {
       colNum += 1
     })
 
-    val nSz = itemNames.keys.size
+    
+    //set the sums
+    
+    
+    
+    
+    val nSz = itemNames.keys.size+1
     val dateSz = dateList.length
 
     for (i <- 0 to nSz) {
