@@ -29,95 +29,122 @@ object WeeklyReporting {
   /*
    * Try and read from the logs 
    */
-  //val logLines = FileUtil.readFromFile("data/log.txt", Settings.propertiesMap("ProjectFileEncoding"))
   val logLines = FileUtil.readFromFile(Settings.logFileName, Settings.propertiesMap("LogFileEncoding"))
-
-  /*
-   * sorting all item to make sure no one is missed
-   */
-  val itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
 
   /*
    * make list of all dates in the interval
    */
-  val startReportingDate = "2015-06-01"
-  val endReportingDate = "2015-06-30"
-
-  /*
-   * we need to create a list of dates
-   */
-  val listDate = DateTime.getDayList(startReportingDate, endReportingDate)
+  val startReportingDate = "2015-07-01"
+  val endReportingDate = "2015-07-03"
 
   val interval = new IntervalResult()
   interval.start = startReportingDate
   interval.end = endReportingDate
 
   /*
-    *  convert the list to items
-    */
-  interval.itemList = itemList
+   * sorting all item to make sure no one is missed
+   */
+  interval.itemList = logLines.map(ItemUtil.parseLogItem).filter(_ != null).sortBy(_.dayValue)
+  /*
+   * get items in specified interval
+   */
   interval.selection = ItemUtil.itemsInInterval(interval.itemList, interval.start, interval.end)
-  //interval.selection.foreach(item=> println(item))
-  val sortedItems = interval.selection.toList.sortBy(item => item.project)
-  val list = interval.selection.toList
 
-  //key prj+act, list of items sorted by prj+act
-  val prjActMap = list.sortBy(item => {
+  /*
+   * key prj+act, list of time items sorted by prj+act
+   * and denoted as Project|Activity
+   */
+  val projectActivityMap = interval.selection.toList.sortBy(item => {
     item.project + item.activity
   }).groupBy(item => {
     item.project + "|" + item.activity
   })
-  //val sortedList = list.sortBy( x => (x.activity) ).foreach(a => println(a) )
 
   case class PrjActSumForDay(name: String, date: String, dateValue: Long, sum: String)
 
   val prjList = new ListBuffer[PrjActSumForDay]
-
   val dt = DateTime
-  prjActMap.foreach(item => {
-    //println(item._1)
+  //  prjActMap.foreach(item => {
+  //
+  //    val entries = item._2
+  //    val actByDay = entries.sortBy(_.dayValue).groupBy(_.dayValue)
+  //    actByDay.foreach(i => {
+  //      /*
+  //       * list same prj+act on same day
+  //       * so need to summarize these items 
+  //       */
+  //      var sumPerDay = 0.0
+  //      val exposedDay = ""
+  //      val sumHours = i._2.map(item2 => {
+  //        //1 calc the sum of hours
+  //        //val mins= dt.elapsedMinutes(dt.getTimePart(item2.start),dt.getTimePart(item2.end))
+  //        val mins = dt.elapsedMinutes(item2.start, item2.end)
+  //        val hours = dt.getDecimalHours(mins)
+  //        sumPerDay += hours
+  //      })
+  //      prjList += PrjActSumForDay(item._1, dt.getDayValueInStr(i._1), i._1, String.valueOf(sumPerDay))
+  //    })
+  //  })
+
+  
+  /*
+   * Project|Activity
+   *  Item(Project|Activity,day1)
+   *  Item(Project|Activity,day2)
+   *  Item(Project|Activity,day3)
+   *  etc
+   */
+  projectActivityMap.foreach(item => {
+
+    /*
+     * Entries for each Project|Activity
+     */
     val entries = item._2
-    val actByDay = entries.sortBy(_.dayValue).groupBy(_.dayValue)
-    actByDay.foreach(i => {
-      //println(dt.getDayValueInStr(i._1))      
-      //list same prj+act on same day
-      //i._2.map(println)
-      //so need to summarize these items 
-      var sumPerDay = 0.0
+    
+    /*
+     * DayValue
+     *  Item(Project|Activity, day1)
+     *  Item(Project|Activity, day1)
+     *  so if we have more than one item for each
+     *  key, this means that we have multiple items of the
+     *  same kind for each day, the need to be summarized
+     */
+    val activitiesForEachDay = entries.sortBy(_.dayValue).groupBy(_.dayValue)
+    val list = activitiesForEachDay.map(i => {
+      /*
+       * list same prj+act on same day
+       * so need to summarize these items 
+       */
+      //var sumPerDay = 0.0
       val exposedDay = ""
-      val sumHours = i._2.map(item2 => {
-        //1 calc the sum of hours
-        //val mins= dt.elapsedMinutes(dt.getTimePart(item2.start),dt.getTimePart(item2.end))
-        val mins = dt.elapsedMinutes(item2.start, item2.end)
-        val hours = dt.getDecimalHours(mins)
-        sumPerDay += hours
-      })
-      prjList += PrjActSumForDay(item._1, dt.getDayValueInStr(i._1), i._1, String.valueOf(sumPerDay))
+      val sumHours = i._2.map(item2 => { 
+        dt.getDecimalHours(dt.elapsedMinutes(item2.start, item2.end))       
+      }).foldLeft(0.0)(_ + _)
+      //PrjActSumForDay(item._1, dt.getDayValueInStr(i._1), i._1, String.valueOf(sumPerDay))
+      prjList += PrjActSumForDay(item._1, dt.getDayValueInStr(i._1), i._1, String.valueOf(sumHours))
     })
   })
 
-  //prjList.map(println)
-
-  //find all items for one day
-
-  val startDate = "2015-06-29"
-  val endDate = "2015-06-30"
-
   //is in day span
-  val start = dt.getDayValueInMs(startDate)
-  val end = dt.getDayValueInMs(endDate)
   
-  val itemsInRange = prjList.filter(i => i.dateValue >= start && i.dateValue <= end && i.name != "Annat|Lunch")
-
-  val dateList = dt.getDayList(startDate, endDate)
-  val itemNames = itemsInRange.sortBy(_.name).groupBy(_.name)
+  /*
+   * Produce a list of days for the report
+   */
+  val start = dt.getDayValueInMs(startReportingDate)
+  val end = dt.getDayValueInMs(endReportingDate)
+  val dateList = dt.getDayList(startReportingDate, endReportingDate)
+  
+  /*
+   * remove lunch
+   */
+  val itemNames = prjList.filter(_.name != "Annat|Lunch").sortBy(_.name).groupBy(_.name)
 
   val RUN_MEW = true
 
   if (RUN_MEW) {
     /*
-   * jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-   */
+    * jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+    */
 
     //itemNames.map(println)
     //setting the matrix size with respect to titles and sums (+2)
@@ -125,14 +152,18 @@ object WeeklyReporting {
 
     matrix(0)(0) = Padder.padd("Code", 50)
 
-    //setting the dates
+    /*
+     * setting the dates 
+     */
     var index = 1
     dateList.foreach(d => {
-      matrix(0)(index) = Padder.padd(d,10)
+      matrix(0)(index) = Padder.padd(d, 10)
       index += 1
     })
 
-    //setting the items
+    /*
+     * setting the items
+     */
     var rowNum = 1
     itemNames.foreach(i => {
       matrix(rowNum)(0) = Padder.padd(i._1, 50)
@@ -140,96 +171,91 @@ object WeeklyReporting {
     })
     matrix(rowNum)(0) = Padder.padd("SUM", 50)
 
-    //run through the list of dates, if we find a
+    /*
+     * run through the list of dates, if we find a
+     */
     var colNum = 1
     dateList.foreach(i => {
-      //println(i)
 
-      //print the names in the first column
-      
+      /*
+       * print the names in the first column 
+       */
       var row = 1
       itemNames.foreach(j => {
         var hasValue = false
-        itemsInRange.foreach(x => {
+        //itemsInRange.foreach(x => {
+        prjList.foreach(x => {
           if (x.name == j._1 && x.date == i) {
-            matrix(row)(colNum) = Padder.padd(x.sum,10)
+            matrix(row)(colNum) = Padder.padd(x.sum, 10)
             hasValue = true
           }
-          
+
         })
-        if(!hasValue){
-          matrix(row)(colNum) = Padder.padd("0.0",10)
+        if (!hasValue) {
+          matrix(row)(colNum) = Padder.padd("0.0", 10)
         }
         row += 1
       })
       colNum += 1
     })
 
-    
-
     /*
-     * set the sums
+     * SET THE SUMS OF FROM THE MATRIX
      */
     val dateListLen = dateList.length;
     val itemNameLen = itemNames.keys.size
-    val sumRow = itemNameLen + 1 
+    val sumRow = itemNameLen + 1
     val sumCol = dateListLen + 1
-    
+
     /*
      * day sums
      */
-    for (i <- 1 to dateListLen){
+    for (i <- 1 to dateListLen) {
       var currentSum = 0.0
-      for (j <- 1 to itemNameLen){
+      for (j <- 1 to itemNameLen) {
         currentSum += matrix(j)(i).toDouble
-      }  
-      matrix(sumRow)(i) = Padder.padd(String.valueOf(currentSum),10)      
+      }
+      matrix(sumRow)(i) = Padder.padd(String.valueOf(currentSum), 10)
     }
-    
+
     /*
      * prj|act sums 
      */
     matrix(0)(sumCol) = Padder.padd("SUM", 10)
-    
-    for (i <- 1 to itemNameLen){
+
+    for (i <- 1 to itemNameLen) {
       var currentSum = 0.0
-      for (j <- 1 to dateListLen){
+      for (j <- 1 to dateListLen) {
         currentSum += matrix(i)(j).toDouble
       }
-      matrix(i)(sumCol) = Padder.padd(String.valueOf(currentSum),10)
+      matrix(i)(sumCol) = Padder.padd(String.valueOf(currentSum), 10)
     }
-    
+
     /*
      * calculate the sum of sums
      */
-    
+
     // 1. sum of prj|act
-    var prjActPeriodSum = 0.0 
-    for (i <- 1 to itemNameLen){
+    var prjActPeriodSum = 0.0
+    for (i <- 1 to itemNameLen) {
       prjActPeriodSum += matrix(i)(sumCol).toDouble
     }
-    
+
     // 2. sum of day
     var daySum = 0.0
-    for (i <- 1 to dateListLen){
+    for (i <- 1 to dateListLen) {
       daySum += matrix(sumRow)(i).toDouble
     }
-    
-    
-    println("Diff days - code sums: " + (daySum - prjActPeriodSum))
-    
-    matrix(sumRow)(sumCol) = String.valueOf(prjActPeriodSum) 
-    
-    
-    
-    
 
-    
+    println("Diff days - code sums: " + (daySum - prjActPeriodSum))
+
+    matrix(sumRow)(sumCol) = String.valueOf(prjActPeriodSum)
+
     /*
      * print the stuff
      */
-    val nSz = itemNames.keys.size+1
-    val dateSz = dateList.length+1
+    val nSz = itemNames.keys.size + 1
+    val dateSz = dateList.length + 1
 
     for (i <- 0 to nSz) {
       for (j <- 0 to dateSz) {
@@ -240,15 +266,18 @@ object WeeklyReporting {
 
   } else {
     /*
-   * jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-   */
+    * jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+    * 
+    *  
+    */
 
     dateList.foreach(i => {
       println(i)
       itemNames.foreach(j => {
         print(j._1 + " ")
         var hasValue = false;
-        itemsInRange.foreach(x => {
+        //itemsInRange.foreach(x => {
+        prjList.foreach(x => {
           if (x.name == j._1 && x.date == i) {
             println(x.sum)
             hasValue = true
@@ -266,53 +295,5 @@ object WeeklyReporting {
    */
 
   }
-
-  /*
-   * try to present all this in a matrix
-   * rows colums
-   */
-
-  //sortedList.map(println)
-
-  //    if (interval.selection.length > 0) {
-  //      /*
-  //      * map.key = project, value = array of activities
-  //      */
-  //      val byProject = interval.selection.groupBy(_.project)
-  //
-  //      interval.projectList = byProject.map(entry => {
-  //        new Project(entry._1, entry._2)
-  //      })
-  //
-  //      interval.projectList.foreach(_.compile)
-  //      interval.totalTime = interval.projectList.map(_.totalTime).reduceLeft(_ + _)
-  //
-  //      /*
-  //      *SUMMARY OF EACH DAY
-  //      */
-  //      val daySumMap = interval.daySumMap
-  //
-  //      val dayResultList = DayResultHelper.getDayResult(DateTime.getDayValueInMs(interval.start), DateTime.getDayValueInMs(interval.end), daySumMap)
-  //      /*
-  //     * print the day
-  //     */
-  //      println(interval.start + " " +
-  //        DateTime.dayName(DateTime.getDayValueInMs(interval.start)) + " " +
-  //        DateTime.getDecimalHours(interval.totalTime))
-  //
-  //      println(interval.presentLinear)
-  //    } else {
-  //      /*
-  //     * print the day
-  //     */
-  //      println(interval.start + " " +
-  //        DateTime.dayName(DateTime.getDayValueInMs(interval.start)) + " " +
-  //        DateTime.getDecimalHours(interval.totalTime))
-  //
-  //      println("No items found")
-  //      //extra line feed for the printing
-  //      println("")
-  //
-  //    }
 
 }
